@@ -1,0 +1,29 @@
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 24px;
+}
+
+.name {
+  font-family: var(--font-serif);
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.state {
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.message {
+  padding: 20px 24px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.message a {
+  font-weight: 500;
+  color: var(--accent);
+}

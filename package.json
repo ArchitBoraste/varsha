@@ -1,0 +1,27 @@
+{
+  "name": "varsha",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Regime-aware rainfall forecast post-processing demo for India (SIH 2026, PS 26080)",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "data": "node scripts/prepare-geo.js && node scripts/generate-data.js"
+  },
+  "dependencies": {
+    "d3-geo": "^3.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router": "^7.18.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "mapshaper": "^0.7.70",
+    "vite": "^8.3.1"
+  }
+}

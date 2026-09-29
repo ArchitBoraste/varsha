@@ -1,0 +1,61 @@
+/* Design tokens taken from the mockups in design/. Data colours (rainfall, probability, regime and
+   warning scales) live in src/lib/scales.js because map fills are computed in JavaScript. */
+
+:root {
+  /* Surfaces */
+  --bg: #f3f5f2;
+  --surface: #ffffff;
+  --surface-2: #eef1ee;
+  --surface-sunken: #e4e9e5;
+  --overlay: rgba(255, 255, 255, 0.94);
+
+  /* Lines */
+  --line: #dce2de;
+  --line-soft: #e4e9e5;
+  --line-control: #d3dad5;
+
+  /* Text */
+  --ink: #13202b;
+  --ink-2: #4a5a66;
+  --ink-3: #5d6d78;
+  --on-dark: #ffffff;
+
+  /* Accent */
+  --accent: #1f5fa8;
+  --accent-soft: #e8eef7;
+  --focus-on-dark: #9cc3f0;
+
+  /* Sidebar */
+  --sidebar: #0f1e29;
+  --sidebar-card: #172b3a;
+  --sidebar-active: #1d3445;
+  --sidebar-text: #c9d6df;
+  --sidebar-muted: #8fa3b1;
+
+  /* Status and maps */
+  --danger: #b03a2e;
+  --map-border: #2a3a47;
+  --compare-raw: #5d6d78;
+
+  /* Type */
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-devanagari: 'Noto Sans Devanagari', 'IBM Plex Sans', sans-serif;
+
+  /* Shape and size */
+  --radius-card: 16px;
+  --radius-panel: 12px;
+  --radius-control: 10px;
+  --radius-chip: 6px;
+  --control-height: 44px;
+  --sidebar-width: 232px;
+  --topbar-height: 72px;
+  --drawer-width: 420px;
+  --page-gutter: 32px;
+
+  /* Elevation */
+  --shadow-raised: 0 1px 2px rgba(19, 32, 43, 0.14);
+  --shadow-float: 0 6px 20px rgba(19, 32, 43, 0.16);
+  --shadow-drawer: -12px 0 32px rgba(19, 32, 43, 0.18);
+}

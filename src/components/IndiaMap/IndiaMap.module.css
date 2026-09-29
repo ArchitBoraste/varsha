@@ -1,0 +1,89 @@
+.map {
+  position: relative;
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: visible;
+}
+
+.districts path {
+  stroke: #ffffff;
+  stroke-width: 0.45px;
+  stroke-linejoin: round;
+}
+
+.selectable path {
+  cursor: pointer;
+}
+
+.overlays,
+.borders,
+.hover,
+.selection {
+  pointer-events: none;
+}
+
+.borders path {
+  fill: none;
+  stroke: var(--map-border);
+  stroke-width: 0.8px;
+  stroke-opacity: 0.45;
+  stroke-linejoin: round;
+}
+
+.hover {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.2px;
+  stroke-linejoin: round;
+}
+
+.selection path {
+  fill: none;
+  stroke-linejoin: round;
+}
+
+.glow {
+  stroke: rgba(31, 95, 168, 0.3);
+  stroke-width: 10px;
+}
+
+.outline {
+  stroke: var(--ink);
+  stroke-width: 2px;
+}
+
+.selectedLabel {
+  position: absolute;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: var(--radius-chip);
+  background: var(--ink);
+  color: var(--on-dark);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.tooltip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  max-width: 240px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--on-dark);
+  font-size: 12px;
+  line-height: 1.45;
+  box-shadow: var(--shadow-float);
+  pointer-events: none;
+}

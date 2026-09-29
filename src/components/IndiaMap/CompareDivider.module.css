@@ -1,0 +1,68 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.chip {
+  position: absolute;
+  top: 4px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: var(--radius-chip);
+  color: var(--on-dark);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.leftChip {
+  background: var(--accent);
+}
+
+.rightChip {
+  background: var(--compare-raw);
+}
+
+/* A 16px-wide grab strip around the 2px line; it runs 8px past the map at both ends. */
+.divider {
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  width: 16px;
+  transform: translateX(-50%);
+  cursor: ew-resize;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 7px;
+  width: 2px;
+  background: var(--ink);
+}
+
+.handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background: var(--ink);
+  color: var(--on-dark);
+  transform: translate(-50%, -50%);
+}
+
+.handle:focus-visible {
+  outline-offset: 3px;
+}

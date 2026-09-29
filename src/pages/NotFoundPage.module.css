@@ -1,0 +1,10 @@
+.card {
+  padding: 20px 24px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.card a {
+  font-weight: 500;
+  color: var(--accent);
+}

@@ -1,0 +1,9 @@
+.body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px var(--page-gutter);
+  overflow: auto;
+}

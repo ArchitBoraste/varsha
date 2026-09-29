@@ -1,0 +1,38 @@
+/* Desktop-only layout, designed at 1440×900 and kept intact from 1280 to 1920 px wide. */
+.shell {
+  position: relative;
+  display: flex;
+  height: 100vh;
+  min-width: 1280px;
+  min-height: 720px;
+  /* clip, not hidden: the closed drawer waits off-screen and must never be scrolled into view. */
+  overflow: clip;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.main:focus {
+  outline: none;
+}
+
+.skipLink {
+  position: absolute;
+  top: -60px;
+  left: 16px;
+  z-index: 30;
+  padding: 10px 14px;
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 500;
+  box-shadow: var(--shadow-float);
+}
+
+.skipLink:focus {
+  top: 16px;
+}

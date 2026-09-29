@@ -1,0 +1,50 @@
+.group {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--radius-panel);
+  background: var(--surface-sunken);
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 62px;
+  height: 40px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  transition: background-color 120ms ease;
+}
+
+.option:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.day {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.date {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.option[aria-pressed='true'] {
+  background: var(--surface);
+  box-shadow: var(--shadow-raised);
+}
+
+.option[aria-pressed='true'] .day {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.option[aria-pressed='true'] .date {
+  color: var(--ink-2);
+}
