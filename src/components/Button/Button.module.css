@@ -11,6 +11,16 @@
   transition: background-color 120ms ease, border-color 120ms ease;
 }
 
+.button[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.square {
+  width: var(--control-height);
+  padding: 0;
+}
+
 .secondary {
   padding: 0 14px;
   border: 1px solid var(--line-control);
@@ -19,8 +29,25 @@
   color: var(--ink);
 }
 
-.secondary:hover {
+.secondary.square {
+  padding: 0;
+  color: var(--ink-2);
+}
+
+.secondary:not([aria-disabled='true']):hover {
   border-color: #b8c3cb;
+}
+
+.primary {
+  padding: 0 16px;
+  border-radius: var(--radius-control);
+  background: var(--accent);
+  color: var(--on-dark);
+  font-weight: 500;
+}
+
+.primary:not([aria-disabled='true']):hover {
+  background: #1a528f;
 }
 
 .dark {
@@ -35,14 +62,12 @@
   background: #22313d;
 }
 
-.icon {
-  width: var(--control-height);
-  padding: 0;
+.ghost {
   border-radius: var(--radius-control);
   background: var(--surface-2);
   color: var(--ink-2);
 }
 
-.icon:hover {
+.ghost:hover {
   background: var(--surface-sunken);
 }

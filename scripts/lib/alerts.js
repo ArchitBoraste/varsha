@@ -1,8 +1,8 @@
 // Draft alerts for every red and orange district on Day 1: messages in English and Hindi, an
 // SMS and a CAP 1.2 document for NDMA's SACHET feed.
 
-import { REGIME_BY_ID, WARNINGS } from '../../src/lib/scales.js';
-import { mainRegime } from './regimes.js';
+import { topRegime } from '../../src/lib/regimes.js';
+import { WARNINGS } from '../../src/lib/scales.js';
 
 const SENDER = 'alerts@varsha.demo';
 const DRAFTED_AT = '2024-07-29T09:40:00+05:30';
@@ -145,7 +145,7 @@ export function buildAlerts(forecast, leadInfo) {
   return warned.map(({ districtId, district, day }) => {
     const level = day.warning;
     const { event, probKey, threshold } = LEVELS[level];
-    const regime = mainRegime(day.p);
+    const regime = topRegime(day.p);
     const { instruction, ...text } = messages(district, level, validTo);
     const alert = {
       id: `VRS-${idDate}-${districtCode(district.name, usedCodes)}`,
@@ -158,7 +158,7 @@ export function buildAlerts(forecast, leadInfo) {
       validity: { label: leadInfo.period, from: leadInfo.validFrom, to: leadInfo.validTo },
       chance: { threshold, p: day.probs[probKey] },
       rainfall: { mm: day.corrected, range: day.range },
-      regime: { id: regime, label: REGIME_BY_ID[regime].label, share: day.p[regime] },
+      regime: { id: regime.id, label: regime.label, share: regime.share },
       exposure: district.exposure,
       ...text,
     };

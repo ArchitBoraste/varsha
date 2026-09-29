@@ -1,0 +1,63 @@
+/* 760 × 780 at 1440 × 900, as in the mockup; narrower on smaller screens. */
+.card {
+  position: relative;
+  flex: 1 1 760px;
+  min-width: 0;
+  min-height: 640px;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+/* Toolbar row, then the layer's status chips or card aligned right below it. */
+.top {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  left: 16px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  pointer-events: none;
+}
+
+.top > * {
+  pointer-events: auto;
+}
+
+.toolbar {
+  align-self: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.toolbar > :last-child:not(:first-child) {
+  margin-left: auto;
+}
+
+.mapArea {
+  position: absolute;
+  inset: 84px 75px 16px;
+}
+
+.legend {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  z-index: 2;
+}
+
+.status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  font-size: 13px;
+  color: var(--ink-2);
+  text-align: center;
+}

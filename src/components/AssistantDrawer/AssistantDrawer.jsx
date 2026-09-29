@@ -37,7 +37,7 @@ export default function AssistantDrawer() {
           <h2 className={styles.title}>Ask Varsha</h2>
           <p className={styles.subtitle}>Answers from today&apos;s forecast data</p>
         </div>
-        <Button ref={closeButtonRef} variant="icon" aria-label="Close assistant" onClick={closeAssistant}>
+        <Button ref={closeButtonRef} variant="ghost" square aria-label="Close assistant" onClick={closeAssistant}>
           <Icon name="close" size={16} strokeWidth={1.8} />
         </Button>
       </header>

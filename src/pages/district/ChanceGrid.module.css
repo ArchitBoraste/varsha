@@ -1,0 +1,53 @@
+.card {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 24px;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Negative margin cancels the outer cell spacing so the grid lines up with the title. */
+.grid {
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 4px;
+  margin: -4px;
+  width: calc(100% + 8px);
+}
+
+.grid thead td {
+  width: 96px;
+}
+
+.grid thead th {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink-2);
+  text-align: center;
+}
+
+.grid thead .current {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rowLabel {
+  font-size: 12px;
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.cell {
+  height: 40px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+}

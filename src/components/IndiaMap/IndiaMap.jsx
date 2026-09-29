@@ -1,10 +1,11 @@
 import { geoPath } from 'd3-geo';
 import { memo, useId, useMemo, useState } from 'react';
 import { cx } from '../../lib/cx.js';
+import useElementSize from '../../lib/useElementSize.js';
+import Tooltip from '../Tooltip/Tooltip.jsx';
 import CompareDivider from './CompareDivider.jsx';
 import { MapContext } from './mapContext.js';
 import { fitProjection } from './projection.js';
-import useElementSize from './useElementSize.js';
 import styles from './IndiaMap.module.css';
 
 const NO_BORDERS = [];
@@ -18,13 +19,6 @@ const DistrictLayer = memo(function DistrictLayer({ shapes, fills }) {
 });
 
 const districtIdAt = (event) => event.target.getAttribute('data-id');
-
-function tooltipStyle({ x, y }, size) {
-  const gap = 14;
-  const left = x > size.width - 220 ? `calc(${x - gap}px - 100%)` : `${x + gap}px`;
-  const top = y > size.height - 90 ? `calc(${y - gap}px - 100%)` : `${y + gap}px`;
-  return { transform: `translate(${left}, ${top})` };
-}
 
 function labelStyle(path, feature, width) {
   const [[x0, y0], [x1, y1]] = path.bounds(feature);
@@ -45,6 +39,7 @@ function labelStyle(path, feature, width) {
  * @param {number|string} [height]
  * @param {object}   [compare]  { leftFill, rightFill, leftLabel, rightLabel }: two colourings
  *                              split by a draggable divider. Replaces getFill.
+ * @param {object}   [fitTo]    GeoJSON to fit the projection to, e.g. one state; defaults to `features`.
  * @param {string}   [label]    Accessible name of the map.
  * @param {React.ReactNode} [children] Overlays drawn in the projected SVG space; use useMap().
  */
@@ -58,6 +53,7 @@ export default function IndiaMap({
   width = '100%',
   height = '100%',
   compare,
+  fitTo,
   label = 'Map of India by district',
   children,
 }) {
@@ -67,8 +63,11 @@ export default function IndiaMap({
   const clipId = useId().replace(/:/g, '');
 
   const projection = useMemo(
-    () => (size.width && size.height ? fitProjection(features, size.width, size.height) : null),
-    [features, size.width, size.height],
+    () =>
+      size.width && size.height
+        ? fitProjection(fitTo ?? { type: 'FeatureCollection', features }, size.width, size.height)
+        : null,
+    [fitTo, features, size.width, size.height],
   );
   const path = useMemo(() => projection && geoPath(projection), [projection]);
   const shapes = useMemo(
@@ -179,9 +178,9 @@ export default function IndiaMap({
       )}
 
       {hovered && getTooltip && (
-        <div className={styles.tooltip} style={tooltipStyle(hover, size)} aria-hidden="true">
+        <Tooltip x={hover.x} y={hover.y} bounds={size}>
           {getTooltip(hovered.feature)}
-        </div>
+        </Tooltip>
       )}
     </div>
   );

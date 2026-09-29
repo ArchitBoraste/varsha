@@ -1,0 +1,37 @@
+.group {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 11px;
+  background: var(--surface-2);
+}
+
+.option {
+  height: 38px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color 120ms ease;
+}
+
+.option:hover {
+  background: var(--surface-sunken);
+}
+
+.option[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--on-dark);
+}
+
+/* Tighter inside a narrow size container, such as the map card on a 1280px screen. */
+@container (max-width: 700px) {
+  .option {
+    padding: 0 8px;
+  }
+}

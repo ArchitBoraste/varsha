@@ -107,6 +107,35 @@ export const DETECTED_SYSTEMS = [
   [depression('east Madhya Pradesh, weakening', 0.69, 'Well-marked low'), offshoreTrough('coastal Karnataka to Kerala', 0.52)],
 ];
 
+// Monsoon lows that crossed central India in the month before the run: [first t, last t, start
+// position, peak rain]. Each moves 1° west and 0.3° north per day, like the Day 1 depression.
+const PAST_LOWS = [
+  { from: -20, to: -15, lon: 87.5, lat: 20.8, amp: 95 },
+  { from: -8, to: -2, lon: 88, lat: 21.2, amp: 85 },
+];
+
+const PHASE_STRENGTH = { active: 1.3, normal: 1, break: 0.35 };
+
+/** Weather systems for a past day `t` (≤ -2) in the observed monsoon `phase`. */
+export function pastSystems(t, phase) {
+  const strength = PHASE_STRENGTH[phase];
+  const wave = 1 + 0.2 * Math.sin(0.9 * t);
+  const low = PAST_LOWS.find(({ from, to }) => t >= from && t <= to);
+  const days = low ? t - low.from : 0;
+  return {
+    ghats: { amp: 60 * strength * wave },
+    // Rain was already building over Wayanad in the last week before the landslides.
+    wayanad: { lon: 76.1, lat: 11.65, amp: t >= -8 ? 45 * strength : 0 },
+    depression: low
+      ? { lon: low.lon - days, lat: low.lat + 0.3 * days, amp: low.amp }
+      : { lon: 85, lat: 21, amp: 0 },
+    // In a break the rain belt shifts to the Himalayan foothills and the north-east.
+    northEast: { lon: 91.6, lat: 25.4, amp: phase === 'break' ? 90 : 45 * wave },
+    foothills: { lon: 78.6, lat: 30.4, amp: phase === 'break' ? 70 : 35 },
+    wd: { lon: 75.4, lat: 33.4, amp: t >= -26 && t <= -23 ? 25 : 4 },
+  };
+}
+
 /** 8–10 Jul 2023: a western disturbance meets the monsoon over north-west India (t = 0 … 2). */
 export function himachalSystems(t) {
   return {

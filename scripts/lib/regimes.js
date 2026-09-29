@@ -34,6 +34,3 @@ export function regimeWeights(place, systems, lead) {
   const hundredths = apportion(exps.map((e) => (100 * e) / total), 100);
   return Object.fromEntries(REGIMES.map(({ id }, i) => [id, hundredths[i] / 100]));
 }
-
-export const mainRegime = (weights) =>
-  REGIMES.reduce((best, { id }) => (weights[id] > weights[best] ? id : best), REGIMES[0].id);

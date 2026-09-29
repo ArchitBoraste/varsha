@@ -8,6 +8,7 @@ import { REGIMES } from '../src/lib/scales.js';
 import { buildAlerts } from './lib/alerts.js';
 import { buildCases } from './lib/cases.js';
 import { forecastDay } from './lib/forecast.js';
+import { buildHistory } from './lib/history.js';
 import { kb, readData, writeData } from './lib/io.js';
 import { sum } from './lib/math.js';
 import { loadPlaces } from './lib/places.js';
@@ -38,7 +39,7 @@ function buildForecast(places) {
   );
 }
 
-function checkConsistency({ forecast, meta, alerts, cases }) {
+function checkConsistency({ forecast, meta, alerts, cases, history }) {
   for (const [id, district] of Object.entries(forecast)) {
     for (const day of district.days) {
       const where = `${id}, Day ${day.lead}`;
@@ -54,6 +55,11 @@ function checkConsistency({ forecast, meta, alerts, cases }) {
   assert.equal(sum(alerts.map((a) => a.exposure.population)), day1.exposure.population, 'exposure totals');
   assert.equal(alerts.filter((a) => a.exposure.landslideProne).length, day1.exposure.landslideProne, 'landslide totals');
   assert.equal(sum(alerts.map((a) => a.exposure.dams.length)), day1.exposure.dams, 'dam totals');
+
+  assert.deepEqual([history.dates[0], history.dates.at(-1)], ['2024-06-29', '2024-07-28'], 'history covers 29 Jun–28 Jul');
+  for (const [id, series] of Object.entries(history.districts)) {
+    for (const values of Object.values(series)) assert.equal(values.length, history.dates.length, `${id}: history length`);
+  }
 
   const replayedDay1 = cases.cases[0].days.find((day) => day.date === LEADS[0].date).values;
   for (const [id, values] of Object.entries(replayedDay1)) {
@@ -91,6 +97,7 @@ async function main() {
     meta,
     alerts: buildAlerts(forecast, LEADS[0]),
     cases: buildCases(places),
+    history: buildHistory(places),
   };
   checkConsistency(products);
 
@@ -102,6 +109,7 @@ async function main() {
     'verification.json': VERIFICATION,
     'cases.json': products.cases,
     'alerts.json': products.alerts,
+    'history.json': products.history,
   };
   const sizes = {};
   for (const [file, content] of Object.entries(files)) sizes[file] = await writeData(file, content);

@@ -5,14 +5,14 @@ import { geoMercator } from 'd3-geo';
 const PADDING = 4;
 const DEG = Math.PI / 180;
 
-/** Mercator projection fitted to `features` inside a width × height box. */
-export function fitProjection(features, width, height, padding = PADDING) {
+/** Mercator projection fitting a GeoJSON object inside a width × height box. */
+export function fitProjection(geojson, width, height, padding = PADDING) {
   return geoMercator().fitExtent(
     [
       [padding, padding],
       [width - padding, height - padding],
     ],
-    { type: 'FeatureCollection', features },
+    geojson,
   );
 }
 

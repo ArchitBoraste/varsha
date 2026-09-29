@@ -41,6 +41,10 @@ const texture = (lon, lat, t) =>
   0.1 * Math.sin(1.9 * lon + 0.7 * lat + 0.8 * t) * Math.cos(1.3 * lat - 0.5 * lon - 0.6 * t) +
   0.06 * Math.sin(3.7 * lon - 2.9 * lat + 1.3 * t);
 
+/** The raw model's day-to-day error, up to ±25%, which no correction can learn. */
+const modelError = (lon, lat, t) =>
+  1 + 0.25 * Math.sin(2.3 * lon + 1.7 * lat + 1.9 * t) * Math.cos(1.1 * lon - 2.1 * lat + 0.7 * t);
+
 /**
  * Rain no post-processing can anticipate: observations differ from the learnable signal by up to
  * ±20%, plus scattered convective showers of up to 8 mm.
@@ -79,13 +83,15 @@ export function climatology(lon, lat) {
 }
 
 /**
- * Observed and raw-model rainfall at a point for valid day `t`, plus the predictable rain the model misses
- * in each regime family (orographic, depression, western-disturbance interaction).
+ * Observed and raw-model rainfall at a point for valid day `t`, plus the rain a trained
+ * correction can recover in each regime family (orographic, depression, western-disturbance
+ * interaction): the model's systematic shortfall, seen through the model's own day-to-day error.
  */
 export function rainfall(lon, lat, systems, bias, t) {
   const { ghats, wayanad, depression, northEast, foothills, wd } = systems;
   const observedTexture = texture(lon, lat, t);
-  const modelTexture = observedTexture * (1 + 0.05 * Math.sin(2.3 * lon + 1.7 * lat + t));
+  const error = modelError(lon, lat, t);
+  const modelTexture = observedTexture * error;
 
   const ghatsRain = ghats.amp * ghatsBand(lon, lat);
   const wayanadRain = wayanad.amp * bump(lon, lat, wayanad.lon, wayanad.lat, 0.45, 0.45);
@@ -104,12 +110,16 @@ export function rainfall(lon, lat, systems, bias, t) {
     dep: modelTexture * bias.depressionAmp * depressionRain(lon, lat, depression, bias.depressionShift),
     wd: modelTexture * bias.wd * (foothillRain + wdRain),
   };
-  const modelRain = model.oro + model.dep + model.wd + base;
+  const modelRain = model.oro + model.dep + model.wd + error * base;
 
   return {
     observed: surprise(signal.oro + signal.dep + signal.wd + base, lon, lat, t),
     raw: bias.drizzle + modelRain,
     modelRain,
-    deficit: { oro: signal.oro - model.oro, dep: signal.dep - model.dep, wd: signal.wd - model.wd },
+    deficit: {
+      oro: error * signal.oro - model.oro,
+      dep: error * signal.dep - model.dep,
+      wd: error * signal.wd - model.wd,
+    },
   };
 }

@@ -27,10 +27,14 @@
   color: var(--ink-2);
 }
 
-.swatch {
+.swatch,
+.symbol {
   width: 14px;
   height: 14px;
   flex-shrink: 0;
+}
+
+.swatch {
   border-radius: 3px;
 }
 

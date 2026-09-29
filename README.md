@@ -54,14 +54,17 @@ are the IMD rain days (24 h ending 08:30 IST) of 30 Jul to 3 Aug 2024.
   `corrected = blend(p, experts)` ([`src/lib/blend.js`](src/lib/blend.js)). The heavy-rain chances,
   likely range and warning level come from [`src/lib/risk.js`](src/lib/risk.js). Both modules are shared
   with the UI, so a regime override recomputes stored values exactly.
-- **Observations (Days 1–3):** the predictable signal plus up to ±20% and scattered showers that no
-  post-processing could anticipate.
+- **What no correction can fix:** the raw model also has a day-to-day error of up to ±25%, and the
+  observations (Days 1–3) differ from the predictable signal by up to ±20% plus scattered showers.
+- **History:** the 30 days before the run (29 Jun–28 Jul 2024) follow the observed active, normal and
+  break spells and two monsoon lows, through the same raw model and experts, for the district page's
+  "last 30 days" chart.
 - **Exposure:** Census 2011 population for the districts in the scenario, elsewhere estimated from area
   and state density; landslide-prone hill districts; 25 large dams.
 - **Verification scores** are the design's target values, not computed from the fields.
 
-Result: 724 districts; on Day 1 there are 4 red and 29 orange districts, so 33 draft alerts. Wayanad on
-Day 1 gets raw 127 mm, Varsha 290 mm, observed 343 mm.
+Result: 724 districts; on Day 1 there are 4 red and 30 orange districts, so 34 draft alerts. Wayanad on
+Day 1 gets raw 122 mm, Varsha 280 mm, observed 343 mm.
 
 | File                | Contents                                                                                       |
 | ------------------- | ---------------------------------------------------------------------------------------------- |
@@ -74,6 +77,7 @@ Day 1 gets raw 127 mm, Varsha 290 mm, observed 343 mm.
 | `verification.json` | Headline scores, baseline ladder, reliability, FSS, scores by lead day, classifier skill        |
 | `cases.json`        | Wayanad (29–31 Jul 2024) and Himachal–Delhi (8–10 Jul 2023) replays: raw, corrected, observed   |
 | `alerts.json`       | Draft alerts for red and orange districts: English, Hindi, SMS and CAP 1.2                      |
+| `history.json`      | Per district, 30 days of observed rainfall and Day 1 forecasts from Varsha and raw GFS          |
 
 ## Folder structure
 
@@ -88,18 +92,20 @@ varsha/
 ├── server/            Express server for Ask Varsha (later step)
 └── src/
     ├── components/    app shell, top bar controls, IndiaMap, shared UI
-    ├── lib/           colour scales, blend and risk (shared with scripts), data loading
-    ├── pages/         one component per route
+    ├── lib/           scales, regimes, blend and risk (shared with scripts), formatting,
+    │                  explanations, search, CSV and data loading
+    ├── pages/         one component per route, with its parts in forecast/, districts/, district/
     ├── state/         global app state and data hooks
     └── styles/        design tokens and global CSS
 ```
 
 ## IndiaMap
 
-`src/components/IndiaMap` draws the district polygons as SVG with d3-geo, fitted to its box. It takes
-`features`, `borders`, `getFill`, `getTooltip`, `selectedId`, `onSelect`, `width`, `height` and an
-optional `compare = { leftFill, rightFill, leftLabel, rightLabel }` for the draggable raw-versus-corrected
-split. Children are overlays drawn in the same projected space:
+`src/components/IndiaMap` draws the district polygons as SVG with d3-geo, fitted to its box (or to
+`fitTo`, e.g. one state). It takes `features`, `borders`, `getFill`, `getTooltip`, `selectedId`,
+`onSelect`, `width`, `height`, `fitTo` and an optional
+`compare = { leftFill, rightFill, leftLabel, rightLabel }` for the draggable raw-versus-corrected split.
+Children are overlays drawn in the same projected space:
 
 ```jsx
 import IndiaMap, { useMap } from '../components/IndiaMap';
@@ -118,3 +124,5 @@ function Marker({ lon, lat }) {
 `cellRect` and `vectorEnds` project grid cells and wind vectors for heatmap and arrow overlays.
 
 The layout targets a 1440×900 screen and holds from 1280 to 1920 px wide; there is no mobile layout.
+
+Search districts from any screen with Ctrl+K (Cmd+K on macOS).

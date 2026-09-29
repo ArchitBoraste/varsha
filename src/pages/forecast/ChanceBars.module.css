@@ -1,0 +1,39 @@
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.label {
+  color: var(--ink-2);
+}
+
+.value {
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.track {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: #e6ebe7;
+}
+
+.fill {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+}

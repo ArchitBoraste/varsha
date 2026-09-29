@@ -1,6 +1,7 @@
 // Monsoon 2024 phase by day: observed up to the run date, forecast for the five lead days,
 // unknown afterwards.
 
+import { likeliestPhase } from '../../src/lib/regimes.js';
 import { RUN } from './scenario.js';
 
 const SEASON_START = Date.UTC(2024, 5, 1);
@@ -19,22 +20,24 @@ const OBSERVED_SPELLS = [
   ['active', 7],
 ];
 
-const likeliest = (phase) => Object.keys(phase).reduce((best, key) => (phase[key] > phase[best] ? key : best));
+const OBSERVED = OBSERVED_SPELLS.flatMap(([phase, days]) => Array(days).fill(phase));
+
+/** Observed phase on an ISO date between 1 June and the run date. */
+export const observedPhaseOn = (isoDate) => OBSERVED[(Date.parse(isoDate) - SEASON_START) / DAY];
 
 /** `summaries` are the per-lead national summaries, whose phase probabilities give the forecast days. */
 export function seasonTimeline(summaries) {
-  const observed = OBSERVED_SPELLS.flatMap(([phase, days]) => Array(days).fill(phase));
   const today = new Date(RUN.init).toISOString().slice(0, 10);
   const todayIndex = (Date.parse(today) - SEASON_START) / DAY;
-  if (observed.length !== todayIndex + 1) throw new Error('Observed spells must end on the run date');
+  if (OBSERVED.length !== todayIndex + 1) throw new Error('Observed spells must end on the run date');
 
   const days = [];
   for (let time = SEASON_START, i = 0; time <= SEASON_END; time += DAY, i++) {
-    const forecastIndex = i - observed.length;
+    const forecastIndex = i - OBSERVED.length;
     const isForecast = forecastIndex >= 0 && forecastIndex < summaries.length;
     days.push({
       date: new Date(time).toISOString().slice(0, 10),
-      phase: observed[i] ?? (isForecast ? likeliest(summaries[forecastIndex].phase) : null),
+      phase: OBSERVED[i] ?? (isForecast ? likeliestPhase(summaries[forecastIndex].phase) : null),
       forecast: isForecast,
       today: i === todayIndex,
     });

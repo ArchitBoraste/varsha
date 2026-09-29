@@ -9,11 +9,15 @@ export function AppStateProvider({ children }) {
   // null means the latest run listed in meta.json (00 UTC 29 Jul 2024 in the demo data).
   const [runId, setRunId] = useState(null);
   const [lead, setLead] = useState(1);
+  // null when no district is selected.
   const [selectedDistrictId, setSelectedDistrictId] = useState(DEFAULT_DISTRICT_ID);
   const [assistantOpen, setAssistantOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const toggleAssistant = useCallback(() => setAssistantOpen((open) => !open), []);
   const closeAssistant = useCallback(() => setAssistantOpen(false), []);
+  const openSearch = useCallback(() => setSearchOpen(true), []);
+  const closeSearch = useCallback(() => setSearchOpen(false), []);
 
   const value = useMemo(
     () => ({
@@ -26,8 +30,11 @@ export function AppStateProvider({ children }) {
       assistantOpen,
       toggleAssistant,
       closeAssistant,
+      searchOpen,
+      openSearch,
+      closeSearch,
     }),
-    [runId, lead, selectedDistrictId, assistantOpen, toggleAssistant, closeAssistant],
+    [runId, lead, selectedDistrictId, assistantOpen, toggleAssistant, closeAssistant, searchOpen, openSearch, closeSearch],
   );
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;

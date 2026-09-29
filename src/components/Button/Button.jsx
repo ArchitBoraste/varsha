@@ -1,13 +1,22 @@
 import { forwardRef } from 'react';
-import { cx } from '../../lib/cx.js';
-import styles from './Button.module.css';
+import { buttonClass } from './buttonClass.js';
 
 /**
- * Buttons from the mockups: `secondary` (white, outlined), `dark` (pill, used for Ask Varsha)
- * and `icon` (square, grey; always pass an aria-label).
+ * A button in one of the mockups' styles (see buttonClass). Icon-only (`square`) buttons need
+ * an aria-label. Use aria-disabled rather than disabled so the button keeps its tooltip and
+ * stays focusable; clicks are then ignored.
  */
-const Button = forwardRef(function Button({ variant = 'secondary', type = 'button', className, ...props }, ref) {
-  return <button ref={ref} type={type} className={cx(styles.button, styles[variant], className)} {...props} />;
+const Button = forwardRef(function Button({ variant, square, className, type = 'button', onClick, ...props }, ref) {
+  const inactive = props['aria-disabled'] === true || props['aria-disabled'] === 'true';
+  return (
+    <button
+      ref={ref}
+      type={type}
+      className={buttonClass({ variant, square, className })}
+      onClick={inactive ? undefined : onClick}
+      {...props}
+    />
+  );
 });
 
 export default Button;

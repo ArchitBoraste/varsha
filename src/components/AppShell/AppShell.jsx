@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router';
 import AssistantDrawer from '../AssistantDrawer/AssistantDrawer.jsx';
+import CommandPalette from '../CommandPalette/CommandPalette.jsx';
 import Sidebar from '../Sidebar/Sidebar.jsx';
 import styles from './AppShell.module.css';
 
@@ -14,6 +15,7 @@ export default function AppShell() {
         <Outlet />
       </main>
       <AssistantDrawer />
+      <CommandPalette />
     </div>
   );
 }

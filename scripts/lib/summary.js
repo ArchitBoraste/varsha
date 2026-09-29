@@ -1,9 +1,9 @@
 // National summary per lead day: monsoon phase, detected systems, warnings, exposure and regimes.
 
+import { topRegime } from '../../src/lib/regimes.js';
 import { REGIMES } from '../../src/lib/scales.js';
 import { climatology } from './fields.js';
 import { logistic, round } from './math.js';
-import { mainRegime } from './regimes.js';
 import { DETECTED_SYSTEMS } from './scenario.js';
 
 // Core monsoon zone of Rajeevan et al. (2010).
@@ -42,7 +42,7 @@ export function nationalSummary(forecast, lead) {
   for (const district of districts) {
     const day = district.days[lead - 1];
     warnings[day.warning] += 1;
-    regimes[mainRegime(day.p)] += 1;
+    regimes[topRegime(day.p).id] += 1;
     if (isWarned(day.warning)) {
       exposure.population += district.exposure.population;
       exposure.landslideProne += district.exposure.landslideProne ? 1 : 0;

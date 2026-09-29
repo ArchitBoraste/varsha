@@ -28,17 +28,30 @@ export const PROB_BANDS = [
 
 export const probColor = (p) => (PROB_BANDS.findLast((band) => p >= band.min) ?? PROB_BANDS[0]).color;
 
-/** The six rainfall regimes, in blend order. */
+/** Bar colours for the chance of each heavy-rain threshold (keys match risk.THRESHOLDS). */
+export const THRESHOLD_COLORS = { p64: '#E27A3E', p115: '#C4443A', p204: '#8C1E3C' };
+
+/** The six rainfall regimes, in blend order. `short` fits compact labels. */
 export const REGIMES = [
-  { id: 'depression', label: 'Depression-embedded', color: '#6A4FC9' },
-  { id: 'orographic', label: 'Orographic', color: '#1E8A6E' },
-  { id: 'coastal', label: 'Coastal', color: '#48A9D8' },
-  { id: 'wd', label: 'WD interaction', color: '#E1A23A' },
-  { id: 'inland', label: 'Active or normal inland', color: '#BCD2E3' },
-  { id: 'break', label: 'Break', color: '#DDD4C2' },
+  { id: 'depression', label: 'Depression-embedded', short: 'Depression', color: '#6A4FC9' },
+  { id: 'orographic', label: 'Orographic', short: 'Orographic', color: '#1E8A6E' },
+  { id: 'coastal', label: 'Coastal', short: 'Coastal', color: '#48A9D8' },
+  { id: 'wd', label: 'WD interaction', short: 'WD interaction', color: '#E1A23A' },
+  { id: 'inland', label: 'Active or normal inland', short: 'Inland', color: '#BCD2E3' },
+  { id: 'break', label: 'Break', short: 'Break', color: '#DDD4C2' },
 ];
 
 export const REGIME_BY_ID = Object.fromEntries(REGIMES.map((regime) => [regime.id, regime]));
+
+/** All-India monsoon phase (layer 1 of the regime engine). */
+export const MONSOON_PHASES = {
+  active: { label: 'Active', color: '#1F5FA8' },
+  normal: { label: 'Normal', color: '#9BB8D3' },
+  break: { label: 'Break', color: '#D9C9A8' },
+};
+
+/** Saliency heatmap ramp, from some to the strongest influence. */
+export const SALIENCY_STOPS = ['#FFD166', '#F0602E', '#C81D3A'];
 
 /** IMD impact-based warning levels, most severe first. */
 export const WARNINGS = {
