@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     // 5173 is often taken by Docker on the demo machine.
-    server: { port: 5180, proxy: api },
+    server: { port: 5180, strictPort: true, proxy: api },
     preview: { proxy: api },
   };
 });
