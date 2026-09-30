@@ -4,3 +4,13 @@ dist/
 *.log
 .DS_Store
 Thumbs.db
+
+# Secrets and local config: never commit.
+.env
+.env.*
+!.env.example
+.claude/
+
+# Written by the Ask Varsha server at run time.
+server/outbox/
+server/cache/

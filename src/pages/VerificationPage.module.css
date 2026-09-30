@@ -1,7 +1,20 @@
-.status {
-  padding: 20px 24px;
-  font-size: 14px;
-  color: var(--ink-2);
+.loading {
+  flex-direction: column;
+}
+
+.skeletonFilters {
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.skeletonTiles {
+  height: 128px;
+  flex-shrink: 0;
+}
+
+.skeletonCharts {
+  flex: 1;
+  min-height: 360px;
 }
 
 /* Ladder 700px and reliability the rest (376px of plot) at 1440 wide, as in the mockup. */

@@ -55,11 +55,48 @@
 
 .status {
   position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  font-size: 13px;
+  inset: 84px 40px 16px max(116px, calc(320px - 25%));
+  display: flex;
+}
+
+/* A map-sized placeholder while the boundaries and forecast load. */
+.skeletonMap {
+  width: 70%;
+  margin: 0 auto;
+  border-radius: 40% 30% 45% 35%;
+}
+
+.highlightNote {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: var(--overlay);
+  font-size: 12px;
   color: var(--ink-2);
-  text-align: center;
+  box-shadow: var(--shadow-raised);
+}
+
+.highlightSwatch {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--accent);
+  border-radius: 3px;
+  background: rgba(31, 95, 168, 0.12);
+}
+
+.clear {
+  min-height: var(--control-height);
+  padding: 0 10px;
+  border: 0;
+  background: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
 }

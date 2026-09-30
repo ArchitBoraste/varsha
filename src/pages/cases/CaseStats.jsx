@@ -1,28 +1,14 @@
 import Card from '../../components/Card/Card.jsx';
 import WarningBadge from '../../components/WarningBadge/WarningBadge.jsx';
 import { formatMm } from '../../lib/format.js';
-import { THRESHOLDS, forecastWarning, observedWarning } from '../../lib/risk.js';
+import { forecastWarning, observedWarning } from '../../lib/risk.js';
+import { VERY_HEAVY_MM, caseDayScores } from '../../lib/scores.js';
 import styles from './CaseStats.module.css';
-
-const VERY_HEAVY = THRESHOLDS.find(({ key }) => key === 'p115').mm;
-
-/** Very heavy days in the case region: how many each forecast caught, and its false alarms. */
-function regionScores(day, ids) {
-  const scores = { observed: 0, caught: { varsha: 0, raw: 0 }, falseAlarms: { varsha: 0, raw: 0 } };
-  for (const id of ids) {
-    const { raw, corrected, observed } = day.values[id];
-    const tally = observed >= VERY_HEAVY ? scores.caught : scores.falseAlarms;
-    if (observed >= VERY_HEAVY) scores.observed += 1;
-    if (corrected >= VERY_HEAVY) tally.varsha += 1;
-    if (raw >= VERY_HEAVY) tally.raw += 1;
-  }
-  return scores;
-}
 
 /** The replay day's numbers: the focus district, the region's very heavy rain and the warning colours. */
 export default function CaseStats({ caseStudy, day, focusName, regionIds }) {
   const focus = day.values[caseStudy.focusDistrict];
-  const scores = regionScores(day, regionIds);
+  const scores = caseDayScores(day, regionIds);
   const warnings = [
     { label: 'From raw', level: forecastWarning(focus.raw, day.lead) },
     { label: 'Varsha', level: forecastWarning(focus.corrected, day.lead), strong: true },
@@ -52,7 +38,7 @@ export default function CaseStats({ caseStudy, day, focusName, regionIds }) {
 
       <Card className={styles.card} aria-labelledby="case-caught-title">
         <h3 id="case-caught-title" className={styles.title}>
-          {caseStudy.region} districts ≥ {VERY_HEAVY} mm caught
+          {caseStudy.region} districts ≥ {VERY_HEAVY_MM} mm caught
         </h3>
         {scores.observed > 0 ? (
           <p className={styles.headline}>

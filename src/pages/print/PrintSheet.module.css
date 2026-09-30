@@ -1,0 +1,163 @@
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
+.screen {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 0 0 40px;
+  background: var(--surface-sunken);
+  /* Maps, chips and bars keep their colours on paper. */
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  background: var(--sidebar);
+  color: var(--sidebar-text);
+  font-size: 13px;
+}
+
+.print {
+  min-height: var(--control-height);
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--accent);
+  color: var(--on-dark);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.print:focus-visible {
+  outline-color: var(--focus-on-dark);
+}
+
+/* A4 minus the 12 mm print margins, shown as a page on screen. */
+.sheet {
+  width: 210mm;
+  min-height: 297mm;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 12mm;
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+}
+
+.status {
+  padding: 40px 0;
+  font-size: 14px;
+  color: var(--ink-2);
+  text-align: center;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wordmark {
+  font-family: var(--font-serif);
+  font-size: 34px;
+  line-height: 1;
+}
+
+.tagline {
+  font-size: 10px;
+  color: var(--ink-2);
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  text-align: right;
+}
+
+.kicker {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 4px 0 0;
+  font-size: 10.5px;
+}
+
+.lines div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.lines dt {
+  color: var(--ink-2);
+}
+
+.lines dd {
+  margin: 0;
+  font-weight: 500;
+}
+
+.footer {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 9px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+@media print {
+  .screen {
+    display: block;
+    padding: 0;
+    background: none;
+  }
+
+  .toolbar {
+    display: none;
+  }
+
+  .sheet {
+    width: auto;
+    min-height: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+}

@@ -1,6 +1,7 @@
 // District search over district and state names.
 
-const normalize = (text) =>
+/** Lower case, without accents or repeated spaces, for matching names. */
+export const normalize = (text) =>
   text
     .normalize('NFKD')
     .replace(/[̀-ͯ]/g, '')

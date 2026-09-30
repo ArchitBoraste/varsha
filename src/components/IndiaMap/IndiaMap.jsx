@@ -9,6 +9,7 @@ import { fitProjection } from './projection.js';
 import styles from './IndiaMap.module.css';
 
 const NO_BORDERS = [];
+const NO_HIGHLIGHTS = [];
 const noDataFill = () => '#E4E9E3';
 // Room kept to the right of a district for its name label before it flips to the left, px.
 const LABEL_ROOM = 130;
@@ -36,6 +37,7 @@ function labelStyle(path, feature, width) {
  * @param {string}   [selectedId] District outlined as selected.
  * @param {Function} [onSelect] id => void, called when a district is clicked.
  * @param {string}   [highlightId] District outlined as if hovered, e.g. from a linked map.
+ * @param {string[]} [highlightIds] Districts outlined together, e.g. the ones an answer is about.
  * @param {Function} [onHover]  id|null => void, called when the hovered district changes.
  * @param {number|string} [width] Size of the map box (px or any CSS length); fills its parent by default.
  * @param {number|string} [height]
@@ -55,6 +57,7 @@ export default function IndiaMap({
   selectedId,
   onSelect,
   highlightId,
+  highlightIds = NO_HIGHLIGHTS,
   onHover,
   width = '100%',
   height = '100%',
@@ -99,6 +102,7 @@ export default function IndiaMap({
   const hovered = hover && shapeById.get(hover.id);
   const outlined = hovered ?? (highlightId && shapeById.get(highlightId));
   const selected = selectedId && shapeById.get(selectedId);
+  const highlighted = useMemo(() => highlightIds.map((id) => shapeById.get(id)).filter(Boolean), [highlightIds, shapeById]);
 
   const updateHover = (next) => {
     if ((next?.id ?? null) !== (hover?.id ?? null)) onHover?.(next?.id ?? null);
@@ -167,6 +171,14 @@ export default function IndiaMap({
               <path key={key} d={d} />
             ))}
           </g>
+
+          {highlighted.length > 0 && (
+            <g className={styles.highlights}>
+              {highlighted.map(({ id, d }) => (
+                <path key={id} d={d} />
+              ))}
+            </g>
+          )}
 
           {outlined && <path className={styles.hover} d={outlined.d} />}
 

@@ -36,6 +36,9 @@ export function exceedanceProbs(mm, lead) {
   return probs;
 }
 
+/** The threshold whose chance sets each warning level; yellow and green are judged on heavy rain. */
+export const LEVEL_THRESHOLDS = { red: THRESHOLDS[2], orange: THRESHOLDS[1], yellow: THRESHOLDS[0], green: THRESHOLDS[0] };
+
 export function warningLevel({ p64, p115, p204 }) {
   if (p204 >= 0.6) return 'red';
   if (p115 >= 0.5) return 'orange';

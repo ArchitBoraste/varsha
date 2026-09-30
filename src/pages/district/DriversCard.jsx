@@ -12,8 +12,8 @@ function barStyle(mm, largest) {
   return { left: `${mm >= 0 ? 50 : 50 - width}%`, width: `${width}%` };
 }
 
-/** Diverging bars of the drivers behind the correction for one lead day. */
-export default function DriversCard({ day }) {
+/** Diverging bars of the drivers behind the correction for one lead day; `compact` fits a half-width column. */
+export default function DriversCard({ day, compact = false }) {
   const change = day.corrected - day.raw;
   const title =
     change === 0
@@ -23,7 +23,7 @@ export default function DriversCard({ day }) {
   const largest = Math.max(1, ...day.drivers.map(({ mm }) => Math.abs(mm)));
 
   return (
-    <Card aria-labelledby="drivers-title" className={styles.card}>
+    <Card aria-labelledby="drivers-title" className={cx(styles.card, compact && styles.compact)}>
       <div className={styles.head}>
         <h2 id="drivers-title" className={styles.title}>
           {title}

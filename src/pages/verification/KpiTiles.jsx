@@ -1,14 +1,8 @@
 import Card from '../../components/Card/Card.jsx';
 import { cx } from '../../lib/cx.js';
 import { formatSigned, formatSignedDecimal } from '../../lib/format.js';
+import { KPIS } from './kpis.js';
 import styles from './KpiTiles.module.css';
-
-const KPIS = [
-  { key: 'rmse', name: () => 'RMSE', hint: 'mm/day, lower is better', better: 'lower', digits: 1, relative: true },
-  { key: 'ets64', name: (t) => `ETS ≥ ${t.ets64} mm`, hint: 'higher is better', better: 'higher', digits: 2 },
-  { key: 'pod115', name: (t) => `POD ≥ ${t.pod115} mm`, hint: 'hits caught', better: 'higher', digits: 2 },
-  { key: 'far115', name: (t) => `FAR ≥ ${t.far115} mm`, hint: 'false alarms, lower is better', better: 'lower', digits: 2 },
-];
 
 function Tile({ kpi, name, score, missing }) {
   const titleId = `kpi-${kpi.key}`;

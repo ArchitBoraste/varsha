@@ -108,6 +108,12 @@ const PATHS = {
       <path d="M16 5v14" />
     </>
   ),
+  plus: (
+    <>
+      <path d="M12 5v14" />
+      <path d="M5 12h14" />
+    </>
+  ),
   chevronUp: <path d="M7 14l5-5 5 5" />,
   chevronDown: <path d="M7 10l5 5 5-5" />,
 };

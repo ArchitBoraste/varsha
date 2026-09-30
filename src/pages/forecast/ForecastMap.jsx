@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import Card from '../../components/Card/Card.jsx';
 import DistrictTooltip from '../../components/DistrictTooltip/DistrictTooltip.jsx';
 import IndiaMap from '../../components/IndiaMap';
+import LoadState, { Skeleton } from '../../components/LoadState/LoadState.jsx';
 import MapLegend from '../../components/MapLegend/MapLegend.jsx';
 import SaliencyOverlay from '../../components/SaliencyOverlay/SaliencyOverlay.jsx';
 import SegmentedControl from '../../components/SegmentedControl/SegmentedControl.jsx';
@@ -17,7 +18,7 @@ import styles from './ForecastMap.module.css';
 
 /** The forecast console's map card: layer switcher, map with overlays, status and legend. */
 export default function ForecastMap() {
-  const { lead, selectedDistrictId, selectDistrict } = useAppState();
+  const { lead, selectedDistrictId, selectDistrict, highlightIds, clearHighlights } = useAppState();
   const { districts, states, error: geoError } = useIndiaGeo();
   const { data: forecast, error: forecastError } = useForecast();
   const summary = useNationalSummary(lead);
@@ -60,6 +61,15 @@ export default function ForecastMap() {
 
   const legend = layerLegend(layer, threshold);
 
+  // Outlines from an Ask Varsha answer last until the next map click.
+  const handleSelect = useCallback(
+    (id) => {
+      clearHighlights();
+      selectDistrict(id);
+    },
+    [clearHighlights, selectDistrict],
+  );
+
   return (
     <Card aria-label="India map" className={styles.card}>
       <div className={styles.top}>
@@ -77,12 +87,13 @@ export default function ForecastMap() {
         {summary && <MapStatus layer={layer} summary={summary} />}
       </div>
 
-      {error && (
-        <p role="alert" className={styles.status}>
-          {error.message}
-        </p>
+      {!ready && (
+        <div className={styles.status}>
+          <LoadState error={error} label="Loading map…">
+            <Skeleton className={styles.skeletonMap} />
+          </LoadState>
+        </div>
       )}
-      {!error && !ready && <p className={styles.status}>Loading map…</p>}
       {ready && (
         <div className={styles.mapArea}>
           <IndiaMap
@@ -92,7 +103,8 @@ export default function ForecastMap() {
             compare={compare}
             getTooltip={getTooltip}
             selectedId={selectedDistrictId}
-            onSelect={selectDistrict}
+            onSelect={handleSelect}
+            highlightIds={highlightIds}
             label={`${layerName} by district, Day ${lead}`}
           >
             {layer === 'exposure' && <ExposureMarkers forecast={forecast} />}
@@ -102,6 +114,16 @@ export default function ForecastMap() {
       )}
 
       <MapLegend className={styles.legend} title={legend.title} items={legend.items} />
+
+      {highlightIds.length > 0 && (
+        <p className={styles.highlightNote}>
+          <span className={styles.highlightSwatch} aria-hidden="true" />
+          {highlightIds.length === 1 ? '1 district' : `${highlightIds.length} districts`} from Ask Varsha
+          <button type="button" className={styles.clear} onClick={clearHighlights}>
+            Clear
+          </button>
+        </p>
+      )}
     </Card>
   );
 }

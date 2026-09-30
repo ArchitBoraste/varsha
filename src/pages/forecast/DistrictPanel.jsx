@@ -3,6 +3,7 @@ import Button from '../../components/Button/Button.jsx';
 import LinkButton from '../../components/Button/LinkButton.jsx';
 import Card from '../../components/Card/Card.jsx';
 import Icon from '../../components/Icon/Icon.jsx';
+import { Skeleton } from '../../components/LoadState/LoadState.jsx';
 import OverrideChip from '../../components/OverrideChip/OverrideChip.jsx';
 import RegimeMix from '../../components/RegimeMix/RegimeMix.jsx';
 import WarningBadge from '../../components/WarningBadge/WarningBadge.jsx';
@@ -123,22 +124,38 @@ export default function DistrictPanel() {
   const [closedByUser, setClosedByUser] = useState(false);
   const district = forecast?.[selectedDistrictId];
 
+  let content;
+  if (!forecast || !meta) {
+    content = (
+      <div className={styles.loading} aria-busy="true">
+        <span className="visually-hidden" role="status">
+          Loading district…
+        </span>
+        <Skeleton className={styles.skeletonTitle} />
+        <Skeleton className={styles.skeletonBlock} />
+        <Skeleton className={styles.skeletonBlock} />
+      </div>
+    );
+  } else if (district) {
+    content = (
+      <DistrictDetails
+        id={selectedDistrictId}
+        district={district}
+        lead={lead}
+        leadInfo={meta.leads[lead - 1]}
+        onClose={() => {
+          setClosedByUser(true);
+          selectDistrict(null);
+        }}
+      />
+    );
+  } else {
+    content = <EmptyState message="Click any district on the map" takeFocus={closedByUser} />;
+  }
+
   return (
     <Card as="aside" aria-label="Selected district" className={styles.panel}>
-      {district && meta ? (
-        <DistrictDetails
-          id={selectedDistrictId}
-          district={district}
-          lead={lead}
-          leadInfo={meta.leads[lead - 1]}
-          onClose={() => {
-            setClosedByUser(true);
-            selectDistrict(null);
-          }}
-        />
-      ) : (
-        <EmptyState message={forecast ? 'Click any district on the map' : 'Loading…'} takeFocus={closedByUser} />
-      )}
+      {content}
     </Card>
   );
 }

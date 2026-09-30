@@ -1,5 +1,13 @@
-.status {
-  padding: 20px 24px;
-  font-size: 14px;
-  color: var(--ink-2);
+.loading {
+  flex-direction: column;
+}
+
+.skeletonMaps {
+  height: 420px;
+  flex-shrink: 0;
+}
+
+.skeletonTable {
+  flex: 1;
+  min-height: 300px;
 }

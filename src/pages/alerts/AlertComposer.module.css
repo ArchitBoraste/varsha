@@ -1,0 +1,284 @@
+.composer {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  container-type: inline-size;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+/* Scrolls on short or narrow screens; the decision buttons below always stay in view. */
+.body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px 24px 4px;
+  overflow: auto;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.name {
+  min-width: 0;
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.pill {
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  padding: 0 10px;
+  border-radius: 13px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.pillDraft {
+  background: #fdf1dc;
+  color: var(--override);
+}
+
+.pillSent {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.pillRejected {
+  background: var(--surface-2);
+  color: var(--ink-2);
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 12px;
+  border-radius: var(--radius-control);
+  background: var(--bg);
+  line-height: 1.3;
+}
+
+.field dt {
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+.field dd {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.tabList {
+  display: flex;
+}
+
+.tab {
+  height: var(--control-height);
+  padding: 0 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.tab:hover {
+  color: var(--ink);
+}
+
+.tab[aria-pressed='true'] {
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.tabNote {
+  overflow: hidden;
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--ink-3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  padding: 0;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.labelRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.counter {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.counterMulti {
+  color: var(--override);
+}
+
+.textarea {
+  flex-shrink: 0;
+  padding: 12px;
+  border: 1px solid var(--line-control);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  font-size: 13px;
+  line-height: 1.55;
+  resize: none;
+}
+
+.textarea:read-only {
+  background: var(--bg);
+  border-color: transparent;
+}
+
+.textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.smsText {
+  font-size: 12.5px;
+}
+
+/* The Malayalam draft is being written. */
+.shimmer {
+  background: linear-gradient(100deg, var(--surface-2) 30%, #f7f9f7 50%, var(--surface-2) 70%) 0 0 / 300% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+.channels {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.channels legend {
+  margin-bottom: 8px;
+}
+
+.channelGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 16px;
+}
+
+.channel {
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.channel input {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.error {
+  padding: 10px 12px;
+  border-radius: var(--radius-control);
+  background: #fbf1ef;
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px 22px;
+}
+
+.approve {
+  min-height: 46px;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.secondary {
+  min-height: 46px;
+  padding: 0 16px;
+}
+
+.reject {
+  color: var(--danger);
+}
+
+.footNote {
+  flex: 1 1 0;
+  min-width: 80px;
+  font-size: 11px;
+  color: var(--ink-3);
+  text-align: right;
+}
+
+/* On a 1280px screen the buttons need the whole row. */
+@container (max-width: 440px) {
+  .footNote {
+    display: none;
+  }
+}

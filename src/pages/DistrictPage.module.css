@@ -22,6 +22,20 @@
   gap: 20px;
 }
 
+.loading {
+  flex-direction: column;
+}
+
+.skeletonHeader {
+  height: 150px;
+  flex-shrink: 0;
+}
+
+.skeletonBody {
+  flex: 1;
+  min-height: 480px;
+}
+
 .message {
   padding: 20px 24px;
   font-size: 14px;

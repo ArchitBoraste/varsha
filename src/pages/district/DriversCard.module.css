@@ -38,6 +38,17 @@
   font-size: 13px;
 }
 
+.compact .head {
+  flex-direction: column;
+  gap: 2px;
+}
+
+.compact .row {
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 36px;
+  gap: 8px;
+  font-size: 12px;
+}
+
 .track {
   position: relative;
   height: 14px;

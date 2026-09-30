@@ -1,0 +1,60 @@
+.block {
+  display: block;
+  border-radius: var(--radius-card);
+  background: linear-gradient(100deg, var(--surface-2) 30%, #f7f9f7 50%, var(--surface-2) 70%) 0 0 / 300% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+.loading {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 20px;
+}
+
+.fill {
+  flex: 1;
+}
+
+.error {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  max-width: 560px;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+.errorTitle {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.errorText {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.retry {
+  min-height: var(--control-height);
+  margin-top: 8px;
+  padding: 0 16px;
+  border: 1px solid var(--line-control);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  font-size: 13px;
+}

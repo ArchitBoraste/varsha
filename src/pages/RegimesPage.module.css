@@ -1,7 +1,18 @@
-.status {
-  padding: 20px 24px;
-  font-size: 14px;
-  color: var(--ink-2);
+.loading {
+  flex-direction: column;
+}
+
+.skeletonRow {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  height: 196px;
+}
+
+.skeletonMain {
+  flex: 1;
+  min-height: 480px;
 }
 
 /* 196px tall as in the mockup. */

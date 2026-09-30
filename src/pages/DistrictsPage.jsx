@@ -1,4 +1,4 @@
-import Card from '../components/Card/Card.jsx';
+import LoadState, { Skeleton } from '../components/LoadState/LoadState.jsx';
 import LeadDaySelector from '../components/LeadDaySelector/LeadDaySelector.jsx';
 import Page from '../components/Page/Page.jsx';
 import RunButton from '../components/RunButton/RunButton.jsx';
@@ -29,9 +29,10 @@ export default function DistrictsPage() {
       }
     >
       {!ready && (
-        <Card className={styles.status} role={error ? 'alert' : undefined}>
-          {error ? error.message : 'Loading districts…'}
-        </Card>
+        <LoadState error={error} label="Loading districts…" className={styles.loading}>
+          <Skeleton className={styles.skeletonMaps} />
+          <Skeleton className={styles.skeletonTable} />
+        </LoadState>
       )}
       {ready && (
         <>

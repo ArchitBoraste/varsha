@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
-import Button from '../components/Button/Button.jsx';
-import Card from '../components/Card/Card.jsx';
+import LinkButton from '../components/Button/LinkButton.jsx';
 import Icon from '../components/Icon/Icon.jsx';
+import LoadState, { Skeleton } from '../components/LoadState/LoadState.jsx';
 import Page from '../components/Page/Page.jsx';
-import { lowerFirst } from '../lib/format.js';
 import { useDataset } from '../state/useDataset.js';
 import ClassifierCard from './verification/ClassifierCard.jsx';
 import Filters from './verification/Filters.jsx';
+import { INITIAL_FILTERS, filteredScores, ladderMax } from './verification/reportView.js';
 import FssChart from './verification/FssChart.jsx';
 import KpiTiles from './verification/KpiTiles.jsx';
 import LadderChart from './verification/LadderChart.jsx';
@@ -14,34 +14,14 @@ import LeadTable from './verification/LeadTable.jsx';
 import ReliabilityChart from './verification/ReliabilityChart.jsx';
 import styles from './VerificationPage.module.css';
 
-const INITIAL_FILTERS = { season: 'monsoon-2024', lead: 1, regime: 'all', region: 'all' };
-
-/** A fixed ETS axis for every filter, so bars can be compared as the filters change. */
-function ladderMax(scores) {
-  let max = 0;
-  for (const byRegime of Object.values(scores)) {
-    for (const entry of Object.values(byRegime)) {
-      for (const { ets64 } of entry?.leads ?? []) max = Math.max(max, ets64.varsha + ets64.ci);
-    }
-  }
-  return Math.ceil(max * 10) / 10;
-}
-
-function Report({ report }) {
-  const [filters, setFilters] = useState(INITIAL_FILTERS);
+function Report({ report, filters, onFilters }) {
   const { lead, regime, region } = filters;
   const axisMax = useMemo(() => ladderMax(report.scores), [report]);
-
-  const entry = report.scores[region][regime];
-  const day = entry?.leads[lead - 1];
-  const regimeLabel = report.regimes.find(({ id }) => id === regime).label;
-  const regionLabel = report.regions.find(({ id }) => id === region).label;
-  // Some regions never see some regimes (no western disturbances in the south peninsula).
-  const missing = `No ${lowerFirst(regimeLabel)} days in ${regionLabel}`;
+  const { entry, day, regionLabel, missing } = filteredScores(report, filters);
 
   return (
     <>
-      <Filters report={report} filters={filters} onChange={setFilters} />
+      <Filters report={report} filters={filters} onChange={onFilters} />
       <KpiTiles day={day} thresholds={report.thresholds} missing={missing} />
       <div className={styles.chartsRow}>
         <LadderChart report={report} lead={lead} region={region} regime={regime} regionLabel={regionLabel} axisMax={axisMax} />
@@ -58,24 +38,29 @@ function Report({ report }) {
 
 export default function VerificationPage() {
   const { data: report, error } = useDataset('verification.json');
+  const [filters, setFilters] = useState(INITIAL_FILTERS);
+  const reportUrl = `/print/verification?lead=${filters.lead}&regime=${filters.regime}&region=${filters.region}`;
 
   return (
     <Page
       title="Verification"
       subtitle="How much better than the raw model, and in which regimes"
       controls={
-        <Button variant="primary" aria-disabled="true" title="Coming in the next step">
+        <LinkButton variant="primary" to={reportUrl} target="_blank" rel="noopener">
           <Icon name="download" size={16} />
           Verification report (PDF)
-        </Button>
+          <span className="visually-hidden"> (opens in a new tab)</span>
+        </LinkButton>
       }
     >
       {report ? (
-        <Report report={report} />
+        <Report report={report} filters={filters} onFilters={setFilters} />
       ) : (
-        <Card className={styles.status} role={error ? 'alert' : undefined}>
-          {error ? error.message : 'Loading verification…'}
-        </Card>
+        <LoadState error={error} label="Loading verification…" className={styles.loading}>
+          <Skeleton className={styles.skeletonFilters} />
+          <Skeleton className={styles.skeletonTiles} />
+          <Skeleton className={styles.skeletonCharts} />
+        </LoadState>
       )}
     </Page>
   );

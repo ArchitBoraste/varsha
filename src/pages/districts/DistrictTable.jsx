@@ -1,6 +1,7 @@
 import { memo, useCallback, useDeferredValue, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import Button from '../../components/Button/Button.jsx';
+import LinkButton from '../../components/Button/LinkButton.jsx';
 import Card from '../../components/Card/Card.jsx';
 import Icon from '../../components/Icon/Icon.jsx';
 import OverrideChip from '../../components/OverrideChip/OverrideChip.jsx';
@@ -13,8 +14,6 @@ import { probColor } from '../../lib/scales.js';
 import { matchesQuery } from '../../lib/search.js';
 import { COLUMNS, DEFAULT_SORT, WARNING_FILTERS, compareRows, csvColumns, districtRows } from './districtRows.js';
 import styles from './DistrictTable.module.css';
-
-const COMING_NEXT = 'Coming in the next step';
 
 // Memoised so re-sorting only moves rows instead of re-rendering every cell.
 const DistrictRow = memo(function DistrictRow({ row, onOpen }) {
@@ -129,9 +128,10 @@ export default function DistrictTable({ forecast, leadInfo }) {
           <Icon name="download" size={16} />
           Export CSV
         </Button>
-        <Button variant="primary" aria-disabled="true" title={COMING_NEXT}>
+        <LinkButton variant="primary" to={`/print/bulletin?lead=${leadInfo.lead}`} target="_blank" rel="noopener">
           Download bulletin (PDF)
-        </Button>
+          <span className="visually-hidden"> (opens in a new tab)</span>
+        </LinkButton>
       </div>
 
       <div className={styles.scroll}>

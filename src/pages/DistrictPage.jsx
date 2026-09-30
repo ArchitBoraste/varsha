@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { Link, useParams } from 'react-router';
-import Button from '../components/Button/Button.jsx';
+import LinkButton from '../components/Button/LinkButton.jsx';
 import Card from '../components/Card/Card.jsx';
 import Icon from '../components/Icon/Icon.jsx';
+import LoadState, { Skeleton } from '../components/LoadState/LoadState.jsx';
 import Page from '../components/Page/Page.jsx';
 import RunButton from '../components/RunButton/RunButton.jsx';
 import { useAppState } from '../state/AppState.jsx';
@@ -36,17 +37,21 @@ export default function DistrictPage() {
       controls={
         <>
           <RunButton />
-          <Button aria-disabled="true" title="Coming in the next step">
-            <Icon name="download" size={16} />
-            District bulletin
-          </Button>
+          {district && (
+            <LinkButton to={`/print/district/${id}?lead=${lead}`} target="_blank" rel="noopener">
+              <Icon name="download" size={16} />
+              District bulletin
+              <span className="visually-hidden"> (opens in a new tab)</span>
+            </LinkButton>
+          )}
         </>
       }
     >
-      {error && (
-        <p role="alert" className={styles.message}>
-          {error.message}
-        </p>
+      {!forecast && (
+        <LoadState error={error} label="Loading district…" className={styles.loading}>
+          <Skeleton className={styles.skeletonHeader} />
+          <Skeleton className={styles.skeletonBody} />
+        </LoadState>
       )}
       {forecast && !district && (
         <Card className={styles.message}>

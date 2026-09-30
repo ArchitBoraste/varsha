@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router';
 import { cx } from '../../lib/cx.js';
-import { useDataset } from '../../state/useDataset.js';
+import { useAppState } from '../../state/AppState.jsx';
+import { useDraftCount } from '../../state/useAlerts.js';
 import Icon from '../Icon/Icon.jsx';
 import styles from './Sidebar.module.css';
 
@@ -14,8 +15,8 @@ const NAV_ITEMS = [
 ];
 
 export default function Sidebar() {
-  const { data: alerts } = useDataset('alerts.json');
-  const drafts = alerts?.filter((alert) => alert.status === 'draft').length ?? 0;
+  const { lead } = useAppState();
+  const drafts = useDraftCount(lead);
 
   return (
     <div className={styles.sidebar}>

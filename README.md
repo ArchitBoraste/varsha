@@ -10,18 +10,39 @@ Requires Node.js 20.19 or later.
 
 ```bash
 npm install
-npm run data
+cp .env.example .env
 npm run dev
 ```
 
-The generated files in `public/data` are committed, so `npm run dev` also works without the data step.
+`npm run dev` starts two processes: the Vite app on http://localhost:5180 and the Ask Varsha API
+server on http://localhost:8787 (Vite proxies `/api` to it). Open the app at http://localhost:5180.
 
-| Script            | What it does                                                                      |
-| ----------------- | --------------------------------------------------------------------------------- |
-| `npm run dev`     | Vite dev server                                                                   |
-| `npm run build`   | Production build in `dist/`                                                       |
-| `npm run preview` | Serves the production build                                                       |
-| `npm run data`    | `scripts/prepare-geo.js`, then `scripts/generate-data.js` (writes `public/data`) |
+The generated files in `public/data` are committed, so the app runs without the data step; `npm run data`
+regenerates them.
+
+### Ask Varsha key
+
+Put one key in `.env` (never committed; `.env.example` lists every setting):
+
+- **Gemini** (default, free): create a key in [Google AI Studio](https://aistudio.google.com/apikey) and
+  set `GEMINI_API_KEY`. `GEMINI_MODEL` defaults to `gemini-flash-latest`.
+- **Claude**: set `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY` (from the Claude Console).
+  `ANTHROPIC_MODEL` defaults to `claude-opus-5-5`, called at low effort with the API's refusal fallback on.
+
+Without a key, or when the model call fails or takes over 30 s, the assistant still answers the common
+questions (red and orange districts by state, a district's forecast and why it was corrected, the national
+summary, a Hindi summary, what changed between Day 1 and Day 2, where the raw model is worst, the case
+studies) with rule-based replies built from the same tools. Malayalam alert drafts need a key; without
+one the Malayalam tab shows the English text.
+
+| Script               | What it does                                                                      |
+| -------------------- | --------------------------------------------------------------------------------- |
+| `npm run dev`        | App and API server together (`concurrently`)                                    |
+| `npm run dev:web`    | Vite dev server only, port 5180                                                   |
+| `npm run dev:server` | API server only, port 8787 (`API_PORT`), restarts when its files change           |
+| `npm run build`      | Production build in `dist/`                                                       |
+| `npm run preview`    | Serves the production build (also proxies `/api`)                                 |
+| `npm run data`       | `scripts/prepare-geo.js`, then `scripts/generate-data.js` (writes `public/data`) |
 
 ## District boundaries
 
@@ -84,7 +105,7 @@ days: Varsha caught 8 and raw 3, with a mean absolute error of 9 against 16 mm/d
 | `saliency.json`     | Regime-engine saliency on a 0.5° grid and 850 hPa winds on a 2° grid, per lead day             |
 | `verification.json` | Per region × regime × lead day: RMSE, ETS, POD, FAR (with 95% intervals), baseline ladder, reliability and FSS; regime-classifier skill per region |
 | `cases.json`        | Wayanad (29–31 Jul 2024) and Himachal–Delhi (8–10 Jul 2023) replays: raw, corrected, observed   |
-| `alerts.json`       | Draft alerts for red and orange districts: English, Hindi, SMS and CAP 1.2                      |
+| `alerts.json`       | Static export of the Day 1 drafts (English and Hindi messages and SMS, CAP 1.2); the Alerts screen derives its drafts live |
 | `history.json`      | Per district, 30 days of observed rainfall and Day 1 forecasts from Varsha and raw GFS          |
 
 ## Folder structure
@@ -97,13 +118,14 @@ varsha/
 │   ├── prepare-geo.js     boundaries
 │   ├── generate-data.js   scenario data, with consistency checks
 │   └── lib/               scenario, fields, regimes, experts and one module per output file
-├── server/            Express server for Ask Varsha (later step)
+├── server/            Express API: Ask Varsha (tools, LLM providers, fallback), translations, alert sending and CAP feed
 └── src/
     ├── components/    app shell, top bar controls, IndiaMap and its overlays, shared UI
-    ├── lib/           scales, regimes, blend, risk, override and summary (shared with scripts),
+    ├── lib/           scales, regimes, blend, risk, override, summary, alerts, alertText and cap
+    │                  (shared with scripts and the server),
     │                  map layers, chart geometry, formatting, explanations, search, CSV, data loading
     ├── pages/         one component per route, with its parts in forecast/, regimes/, districts/,
-    │                  district/, verification/ and cases/
+    │                  district/, alerts/, verification/, cases/ and print/ (A4 reports)
     ├── state/         global app state, forecaster overrides and data hooks
     └── styles/        design tokens and global CSS
 ```
@@ -147,3 +169,46 @@ recomputed with `risk.js`. National counts (warnings, exposure, regimes) are rec
 The layout targets a 1440×900 screen and holds from 1280 to 1920 px wide; there is no mobile layout.
 
 Search districts from any screen with Ctrl+K (Cmd+K on macOS).
+
+## Alerts
+
+`/alerts` drafts one alert per red and orange district for the selected lead day, straight from the
+effective forecast, so an override that changes a warning adds or removes a draft (and the sidebar
+badge counts the drafts still awaiting a decision). The composer shows the facts, the message in English,
+Hindi (templates in [`src/lib/alertText.js`](src/lib/alertText.js)) and Malayalam (drafted by the
+language model through `POST /api/translate`, cached in `server/cache/`), an SMS with a GSM/Unicode
+segment counter, the channels, and a live SMS and CAP 1.2 preview ([`src/lib/cap.js`](src/lib/cap.js)).
+Decisions and edits are kept in `localStorage`.
+
+**Approve and send** posts the texts to `POST /api/alerts/:id/send`. The server re-derives the alert from
+the forecast and the client's overrides, writes the CAP document to `server/outbox/<identifier>.xml`
+(identifier `VRS-<yyyymmdd>-<district code>`) and returns a receipt for the delivery timeline. The SMS,
+email and webhook channels are simulated. Sent alerts are listed in an Atom feed at `GET /api/cap/feed`,
+the shape CAP aggregators such as SACHET poll. Timestamps are on the scenario's day (29 Jul 2024) at the
+current time of day, so they fall inside the forecast's validity.
+
+## Ask Varsha
+
+The drawer (top bar, every screen) posts the question, the last six turns, the lead day and the
+forecaster's overrides to `POST /api/ask`. The server runs the model with up to five rounds of read-only
+tools over the same data and shared modules as the UI ([`server/tools.js`](server/tools.js)):
+`list_districts`, `get_district`, `get_national_summary`, `get_regime_mix`, `get_verification`,
+`get_case` and `compare_leads` (Day 1 against Day 2; the demo holds a single run). The answer's table,
+source chips and actions ("Draft red alerts for these N", "Show on map") are built from the tool calls,
+not from the model's text. The conversation stays in app state while you move between screens.
+
+## Printable reports
+
+Each report opens in a new tab without the app shell, lays out on A4 and opens the print dialog once the
+data and fonts are in (choose "Save as PDF"):
+
+- `/print/bulletin?lead=N` — all-India bulletin: warning map, counts, exposure, red and orange districts
+  (District outlook → "Download bulletin (PDF)").
+- `/print/district/:id?lead=N` — one-page district bulletin (District page → "District bulletin").
+- `/print/verification?lead=N&regime=…&region=…` — verification report for the current filters
+  (Verification → "Verification report (PDF)").
+
+## Demo tips
+
+- Alt+Shift+R resets the demo (overrides, alert decisions and edits, chat, map highlights); there is no
+  visible control. See [`DEMO.md`](DEMO.md) for a three-minute recording script.

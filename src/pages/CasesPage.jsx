@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import Card from '../components/Card/Card.jsx';
+import LoadState, { Skeleton } from '../components/LoadState/LoadState.jsx';
 import Page from '../components/Page/Page.jsx';
 import { useDataset, useIndiaGeo } from '../state/useDataset.js';
 import CaseList from './cases/CaseList.jsx';
@@ -27,9 +27,10 @@ export default function CasesPage() {
           <CaseReplay key={selected.id} caseStudy={selected} districts={districts} states={states} places={places} />
         </>
       ) : (
-        <Card className={styles.status} role={error ? 'alert' : undefined}>
-          {error ? error.message : 'Loading case studies…'}
-        </Card>
+        <LoadState error={error} label="Loading case studies…">
+          <Skeleton className={styles.skeletonList} />
+          <Skeleton className={styles.skeletonReplay} />
+        </LoadState>
       )}
     </Page>
   );

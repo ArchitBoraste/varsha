@@ -44,10 +44,10 @@
   --compare-raw: #5d6d78;
 
   /* Type */
-  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  /* Plex has no Indic glyphs: Hindi and Malayalam text falls through to the Noto faces. */
+  --font-sans: 'IBM Plex Sans', 'Noto Sans Devanagari', 'Noto Sans Malayalam', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
   --font-serif: 'Instrument Serif', Georgia, serif;
-  --font-devanagari: 'Noto Sans Devanagari', 'IBM Plex Sans', sans-serif;
 
   /* Shape and size */
   --radius-card: 16px;

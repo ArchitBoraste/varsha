@@ -185,3 +185,17 @@
 .empty:focus {
   outline: none;
 }
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skeletonTitle {
+  height: 56px;
+}
+
+.skeletonBlock {
+  height: 140px;
+}
