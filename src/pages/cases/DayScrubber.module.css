@@ -1,0 +1,65 @@
+.scrubber {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 48px;
+  border-radius: 8px;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.track,
+.fill {
+  position: absolute;
+  top: 12px;
+  left: 8px;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.track {
+  right: 8px;
+  background: var(--surface-sunken);
+}
+
+.fill {
+  background: var(--accent);
+  transition: width 200ms ease;
+}
+
+.dot {
+  position: absolute;
+  top: 6px;
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  border-radius: 8px;
+  background: #c4cdd3;
+}
+
+.past {
+  background: var(--accent);
+}
+
+.current {
+  top: 3px;
+  width: 22px;
+  height: 22px;
+  margin-left: -11px;
+  border: 3px solid var(--accent);
+  border-radius: 11px;
+  background: var(--surface);
+}
+
+.label {
+  position: absolute;
+  top: 30px;
+  font-size: 12px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.currentLabel {
+  font-weight: 600;
+  color: var(--ink);
+}

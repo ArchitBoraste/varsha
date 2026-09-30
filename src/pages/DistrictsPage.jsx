@@ -4,6 +4,7 @@ import Page from '../components/Page/Page.jsx';
 import RunButton from '../components/RunButton/RunButton.jsx';
 import { useAppState } from '../state/AppState.jsx';
 import { useDataset, useIndiaGeo } from '../state/useDataset.js';
+import { useForecast } from '../state/useForecast.js';
 import DistrictTable from './districts/DistrictTable.jsx';
 import HeavyRainMaps from './districts/HeavyRainMaps.jsx';
 import styles from './DistrictsPage.module.css';
@@ -11,7 +12,7 @@ import styles from './DistrictsPage.module.css';
 export default function DistrictsPage() {
   const { lead } = useAppState();
   const { districts, states, error: geoError } = useIndiaGeo();
-  const { data: forecast, error: forecastError } = useDataset('forecast.json');
+  const { data: forecast, error: forecastError } = useForecast();
   const { data: meta } = useDataset('meta.json');
   const error = geoError ?? forecastError;
   const ready = districts && states && forecast && meta;

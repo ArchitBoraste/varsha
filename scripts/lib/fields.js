@@ -45,13 +45,16 @@ const texture = (lon, lat, t) =>
 const modelError = (lon, lat, t) =>
   1 + 0.25 * Math.sin(2.3 * lon + 1.7 * lat + 1.9 * t) * Math.cos(1.1 * lon - 2.1 * lat + 0.7 * t);
 
+// Unpredictability of organised monsoon rain; systems may carry their own (see scenario.pastSystems).
+const ORGANISED = { scale: 0.2, showers: 8 };
+
 /**
  * Rain no post-processing can anticipate: observations differ from the learnable signal by up to
- * ±20%, plus scattered convective showers of up to 8 mm.
+ * ±`scale` (a fraction), plus scattered convective showers of up to `showers` mm.
  */
-function surprise(predictable, lon, lat, t) {
-  const scale = 1 + 0.2 * Math.sin(2.7 * lon - 1.9 * lat + 1.1 * t) * Math.cos(2.2 * lat + 0.8 * lon - 0.7 * t);
-  const showers = 8 * Math.max(0, Math.sin(4.3 * lon + 3.1 * lat - 2 * t) * Math.sin(3.9 * lat - 1.3 * lon + t));
+function surprise(predictable, lon, lat, t, { scale: amplitude, showers: showerMm }) {
+  const scale = 1 + amplitude * Math.sin(2.7 * lon - 1.9 * lat + 1.1 * t) * Math.cos(2.2 * lat + 0.8 * lon - 0.7 * t);
+  const showers = showerMm * Math.max(0, Math.sin(4.3 * lon + 3.1 * lat - 2 * t) * Math.sin(3.9 * lat - 1.3 * lon + t));
   return predictable * scale + showers;
 }
 
@@ -113,7 +116,7 @@ export function rainfall(lon, lat, systems, bias, t) {
   const modelRain = model.oro + model.dep + model.wd + error * base;
 
   return {
-    observed: surprise(signal.oro + signal.dep + signal.wd + base, lon, lat, t),
+    observed: surprise(signal.oro + signal.dep + signal.wd + base, lon, lat, t, systems.surprise ?? ORGANISED),
     raw: bias.drizzle + modelRain,
     modelRain,
     deficit: {

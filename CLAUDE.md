@@ -20,8 +20,13 @@ scenario (not live model data).
 - Plain CSS: `src/styles/tokens.css` (CSS variables) + CSS Modules per component. No Tailwind, no UI kit.
 - Maps: d3-geo SVG via the shared `IndiaMap` component (`src/components/IndiaMap/`). No tile basemap, no API keys.
 - Charts: hand-built SVG/CSS.
-- Shared logic lives in `src/lib/` (scales, blend, risk, explain, format, …). The data scripts import the
-  same `blend.js` / `risk.js`, so UI recomputation (e.g. overrides) reproduces stored values exactly. Keep it that way.
+- Shared logic lives in `src/lib/` (scales, blend, risk, override, summary, layers, explain, format, …). The data
+  scripts import the same `blend.js` / `risk.js` / `summary.js`, so UI recomputation (e.g. overrides) reproduces
+  stored values exactly, and `generate-data.js` checks it. Keep it that way.
+- Forecaster overrides are app-wide: read the forecast only through `useForecast()`, `useDistrictDay(id, lead)` or
+  `useNationalSummary(lead)` (`src/state/useForecast.js`), never `useDataset('forecast.json')` directly, except
+  where the regime engine's own values are wanted (the override card's "from" regime). Show `OverrideChip` wherever
+  an overridden district-day appears. Case replays show the untouched model output.
 - Senior-engineer quality: small focused components, consistent naming, no dead code, brief comments only
   where logic is not obvious, semantic HTML, visible focus states, aria labels on icon buttons, buttons ≥ 44 px.
 - Target screen 1440×900 (demo recording); nothing may break between 1280 and 1920 px wide. No mobile layout.
@@ -58,8 +63,11 @@ from the top bar on every screen; the search palette opens on Ctrl/Cmd+K.
 ## Status
 - Step 1 (done): scaffold, design system, app shell, data pipeline, IndiaMap.
 - Step 2 (done): Forecast console (5 layers, compare, panel, search), District outlook, District page, history.json.
-- Step 3: forecaster override (app-wide), Regime monitor, Verification lab, Case studies.
-- Step 4 (next): Alerts screen, Ask Varsha assistant (small Express server + LLM), printable bulletins/reports, polish.
+- Step 3 (done): forecaster override (app-wide, localStorage), Regime monitor, Verification lab (verification.json
+  now per lead × regime × region), Case studies, believable history.json catch rates.
+- Step 4 (next): Alerts screen (must use the override-aware selectors; the sidebar draft count still comes from
+  alerts.json), Ask Varsha assistant (small Express server + LLM), printable bulletins/reports (their buttons are
+  disabled with "Coming in the next step"), polish.
 
 ## Working rules
 - Commit at the end of each step with a conventional message (`feat: …`, `fix: …`, `chore: …`).

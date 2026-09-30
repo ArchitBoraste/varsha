@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { useOverrides } from './useOverrides.js';
 
 const AppStateContext = createContext(null);
 
@@ -13,6 +14,7 @@ export function AppStateProvider({ children }) {
   const [selectedDistrictId, setSelectedDistrictId] = useState(DEFAULT_DISTRICT_ID);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const { overrides, applyOverride, undoOverride } = useOverrides();
 
   const toggleAssistant = useCallback(() => setAssistantOpen((open) => !open), []);
   const closeAssistant = useCallback(() => setAssistantOpen(false), []);
@@ -33,8 +35,24 @@ export function AppStateProvider({ children }) {
       searchOpen,
       openSearch,
       closeSearch,
+      overrides,
+      applyOverride,
+      undoOverride,
     }),
-    [runId, lead, selectedDistrictId, assistantOpen, toggleAssistant, closeAssistant, searchOpen, openSearch, closeSearch],
+    [
+      runId,
+      lead,
+      selectedDistrictId,
+      assistantOpen,
+      toggleAssistant,
+      closeAssistant,
+      searchOpen,
+      openSearch,
+      closeSearch,
+      overrides,
+      applyOverride,
+      undoOverride,
+    ],
   );
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;

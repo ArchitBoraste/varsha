@@ -1,0 +1,28 @@
+/* 584 × 564 at 1440 × 900: fills the first screen below the summary row (72px top bar, 24px
+   padding, 196px row and 20px gap above it; 24px padding below). */
+.card {
+  position: relative;
+  height: max(480px, calc(100vh - 336px));
+  overflow: hidden;
+}
+
+.toolbar {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 2;
+}
+
+/* As in the mockup the map sits right of the legend, which covers only sea off the west coast;
+   narrower cards move the map further right so the legend still clears the coast. */
+.mapArea {
+  position: absolute;
+  inset: 58px 34px 24px max(96px, calc(266px - 25%));
+}
+
+.legend {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  z-index: 2;
+}

@@ -35,11 +35,15 @@ function labelStyle(path, feature, width) {
  * @param {Function} [getTooltip] feature => tooltip content shown on hover.
  * @param {string}   [selectedId] District outlined as selected.
  * @param {Function} [onSelect] id => void, called when a district is clicked.
+ * @param {string}   [highlightId] District outlined as if hovered, e.g. from a linked map.
+ * @param {Function} [onHover]  id|null => void, called when the hovered district changes.
  * @param {number|string} [width] Size of the map box (px or any CSS length); fills its parent by default.
  * @param {number|string} [height]
  * @param {object}   [compare]  { leftFill, rightFill, leftLabel, rightLabel }: two colourings
  *                              split by a draggable divider. Replaces getFill.
- * @param {object}   [fitTo]    GeoJSON to fit the projection to, e.g. one state; defaults to `features`.
+ * @param {object|number[][]} [fitTo] What to fit the projection to: GeoJSON (e.g. one state) or a
+ *                              [[west, south], [east, north]] box; defaults to `features`. Districts
+ *                              outside it are still drawn, so clip the map's container.
  * @param {string}   [label]    Accessible name of the map.
  * @param {React.ReactNode} [children] Overlays drawn in the projected SVG space; use useMap().
  */
@@ -50,6 +54,8 @@ export default function IndiaMap({
   getTooltip,
   selectedId,
   onSelect,
+  highlightId,
+  onHover,
   width = '100%',
   height = '100%',
   compare,
@@ -91,16 +97,22 @@ export default function IndiaMap({
   );
 
   const hovered = hover && shapeById.get(hover.id);
+  const outlined = hovered ?? (highlightId && shapeById.get(highlightId));
   const selected = selectedId && shapeById.get(selectedId);
+
+  const updateHover = (next) => {
+    if ((next?.id ?? null) !== (hover?.id ?? null)) onHover?.(next?.id ?? null);
+    setHover(next);
+  };
 
   const handlePointerMove = (event) => {
     const id = districtIdAt(event);
     if (!id) {
-      setHover(null);
+      updateHover(null);
       return;
     }
     const box = boxRef.current.getBoundingClientRect();
-    setHover({ id, x: event.clientX - box.left, y: event.clientY - box.top });
+    updateHover({ id, x: event.clientX - box.left, y: event.clientY - box.top });
   };
 
   const handleClick = (event) => {
@@ -129,7 +141,7 @@ export default function IndiaMap({
           <g
             className={cx(styles.districts, onSelect && styles.selectable)}
             onPointerMove={handlePointerMove}
-            onPointerLeave={() => setHover(null)}
+            onPointerLeave={() => updateHover(null)}
             onClick={onSelect && handleClick}
           >
             {compare ? (
@@ -156,7 +168,7 @@ export default function IndiaMap({
             ))}
           </g>
 
-          {hovered && <path className={styles.hover} d={hovered.d} />}
+          {outlined && <path className={styles.hover} d={outlined.d} />}
 
           {selected && (
             <g className={styles.selection}>

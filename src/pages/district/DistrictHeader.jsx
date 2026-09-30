@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import Card from '../../components/Card/Card.jsx';
 import IndiaMap from '../../components/IndiaMap';
+import OverrideChip from '../../components/OverrideChip/OverrideChip.jsx';
 import RegimeChip from '../../components/RegimeChip/RegimeChip.jsx';
 import WarningBadge from '../../components/WarningBadge/WarningBadge.jsx';
 import { formatPercent } from '../../lib/format.js';
@@ -48,6 +49,7 @@ export default function DistrictHeader({ id, district, lead }) {
         <div className={styles.badges}>
           <WarningBadge level={day.warning} showAction />
           <RegimeChip weights={day.p} />
+          {day.override && <OverrideChip override={day.override} />}
         </div>
       </div>
       <dl className={styles.stats}>

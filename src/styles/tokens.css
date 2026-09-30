@@ -34,6 +34,12 @@
 
   /* Status and maps */
   --danger: #b03a2e;
+  --success: #16624e;
+  --success-soft: #e3f1ec;
+  --override: #7a4a0c;
+  --override-soft: #fcf0dc;
+  --override-line: #efd3a4;
+  --override-on-dark: #f6c77c;
   --map-border: #2a3a47;
   --compare-raw: #5d6d78;
 

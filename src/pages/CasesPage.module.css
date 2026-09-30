@@ -1,0 +1,11 @@
+.page {
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.status {
+  align-self: flex-start;
+  padding: 20px 24px;
+  font-size: 14px;
+  color: var(--ink-2);
+}

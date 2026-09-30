@@ -12,6 +12,12 @@ export const formatSigned = (value) => `${sign(Math.round(value))}${Math.abs(Mat
 
 export const formatSignedMm = (mm) => `${formatSigned(mm)} mm`;
 
+/** "+0.08", "−0.06" or "0.00" with a fixed number of decimals. */
+export function formatSignedDecimal(value, digits) {
+  const text = Math.abs(value).toFixed(digits);
+  return Number(text) === 0 ? text : `${sign(value)}${text}`;
+}
+
 /** Probability (0–1) as a whole percentage. */
 export const formatPercent = (p) => `${Math.round(p * 100)}%`;
 
@@ -32,6 +38,10 @@ export function formatShortDate(isoDate) {
   const [, month, day] = isoDate.split('-').map(Number);
   return `${day} ${MONTHS[month - 1]}`;
 }
+
+/** "09:42", the local 24-hour time of an ISO timestamp. */
+export const formatClock = (iso) =>
+  new Date(iso).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
 
 /** "1 large dam", "2 large dams". */
 export const plural = (count, singular, pluralForm = `${singular}s`) =>

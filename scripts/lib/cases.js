@@ -4,7 +4,6 @@ import { forecastDay } from './forecast.js';
 import {
   GFS_BIAS,
   GFS_BIAS_2023,
-  describeRun,
   himachalSystems,
   rainDayEnd,
   shortDate,
@@ -52,13 +51,13 @@ export function buildCases(places) {
     cases: CASES.map(({ firstRun, dayOffset, systems, bias, ...details }) => ({
       ...details,
       days: Array.from({ length: CASE_DAYS }, (_, day) => {
-        const run = describeRun(new Date(Date.parse(firstRun) + day * DAY));
-        const end = rainDayEnd(new Date(run.init), 1);
+        const init = new Date(Date.parse(firstRun) + day * DAY);
+        const end = rainDayEnd(init, 1);
         const t = day + dayOffset;
         return {
           date: end.toISOString().slice(0, 10),
           label: shortDate(end),
-          run: run.longLabel,
+          run: `${shortDate(init)} ${init.getUTCFullYear()}, 00 UTC`,
           lead: 1,
           values: Object.fromEntries(
             places.map((place) => {

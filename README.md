@@ -58,13 +58,21 @@ are the IMD rain days (24 h ending 08:30 IST) of 30 Jul to 3 Aug 2024.
   observations (Days 1–3) differ from the predictable signal by up to ±20% plus scattered showers.
 - **History:** the 30 days before the run (29 Jun–28 Jul 2024) follow the observed active, normal and
   break spells and two monsoon lows, through the same raw model and experts, for the district page's
-  "last 30 days" chart.
+  "last 30 days" chart. On these ordinary rain days the raw model catches more of the orographic rain
+  (70% of the Ghats rain, 50% over Wayanad), rain over Wayanad comes in bursts, and what falls strays up
+  to ±25% from the learnable signal. The generator checks that Wayanad's record stays believable: raw
+  catches 25–40% of the heavy-rain days, Varsha 70–85%, and Varsha's mean absolute error is 30–45% lower.
 - **Exposure:** Census 2011 population for the districts in the scenario, elsewhere estimated from area
   and state density; landslide-prone hill districts; 25 large dams.
-- **Verification scores** are the design's target values, not computed from the fields.
+- **Verification scores** are the design's target values for all India and all regimes, not computed
+  from the fields. Every lead day × regime × region combination is derived from them deterministically,
+  and the generator checks that Varsha beats raw everywhere, skill falls with lead day, the orographic
+  and depression experts add the most, and the north-east has the widest error bars. A region's
+  regimes that never occur there (no western disturbances on the west coast) are `null`.
 
 Result: 724 districts; on Day 1 there are 4 red and 30 orange districts, so 34 draft alerts. Wayanad on
-Day 1 gets raw 122 mm, Varsha 280 mm, observed 343 mm.
+Day 1 gets raw 122 mm, Varsha 280 mm, observed 343 mm. In the 30 days before, Wayanad had 11 heavy-rain
+days: Varsha caught 8 and raw 3, with a mean absolute error of 9 against 16 mm/day.
 
 | File                | Contents                                                                                       |
 | ------------------- | ---------------------------------------------------------------------------------------------- |
@@ -74,7 +82,7 @@ Day 1 gets raw 122 mm, Varsha 280 mm, observed 343 mm.
 | `forecast.json`     | Per district: centroid, exposure and five days of raw, corrected, regimes, experts, risk, drivers |
 | `timeline.json`     | Monsoon 2024 phase per day, with the forecast days and today flagged                           |
 | `saliency.json`     | Regime-engine saliency on a 0.5° grid and 850 hPa winds on a 2° grid, per lead day             |
-| `verification.json` | Headline scores, baseline ladder, reliability, FSS, scores by lead day, classifier skill        |
+| `verification.json` | Per region × regime × lead day: RMSE, ETS, POD, FAR (with 95% intervals), baseline ladder, reliability and FSS; regime-classifier skill per region |
 | `cases.json`        | Wayanad (29–31 Jul 2024) and Himachal–Delhi (8–10 Jul 2023) replays: raw, corrected, observed   |
 | `alerts.json`       | Draft alerts for red and orange districts: English, Hindi, SMS and CAP 1.2                      |
 | `history.json`      | Per district, 30 days of observed rainfall and Day 1 forecasts from Varsha and raw GFS          |
@@ -91,20 +99,22 @@ varsha/
 │   └── lib/               scenario, fields, regimes, experts and one module per output file
 ├── server/            Express server for Ask Varsha (later step)
 └── src/
-    ├── components/    app shell, top bar controls, IndiaMap, shared UI
-    ├── lib/           scales, regimes, blend and risk (shared with scripts), formatting,
-    │                  explanations, search, CSV and data loading
-    ├── pages/         one component per route, with its parts in forecast/, districts/, district/
-    ├── state/         global app state and data hooks
+    ├── components/    app shell, top bar controls, IndiaMap and its overlays, shared UI
+    ├── lib/           scales, regimes, blend, risk, override and summary (shared with scripts),
+    │                  map layers, chart geometry, formatting, explanations, search, CSV, data loading
+    ├── pages/         one component per route, with its parts in forecast/, regimes/, districts/,
+    │                  district/, verification/ and cases/
+    ├── state/         global app state, forecaster overrides and data hooks
     └── styles/        design tokens and global CSS
 ```
 
 ## IndiaMap
 
 `src/components/IndiaMap` draws the district polygons as SVG with d3-geo, fitted to its box (or to
-`fitTo`, e.g. one state). It takes `features`, `borders`, `getFill`, `getTooltip`, `selectedId`,
-`onSelect`, `width`, `height`, `fitTo` and an optional
-`compare = { leftFill, rightFill, leftLabel, rightLabel }` for the draggable raw-versus-corrected split.
+`fitTo`: GeoJSON such as one state, or a `[[west, south], [east, north]]` box). It takes `features`,
+`borders`, `getFill`, `getTooltip`, `selectedId`, `onSelect`, `width`, `height`, `fitTo`, an
+optional `compare = { leftFill, rightFill, leftLabel, rightLabel }` for the draggable
+raw-versus-corrected split, and `highlightId` / `onHover` to link the hover between several maps.
 Children are overlays drawn in the same projected space:
 
 ```jsx
@@ -121,7 +131,18 @@ function Marker({ lon, lat }) {
 </IndiaMap>;
 ```
 
-`cellRect` and `vectorEnds` project grid cells and wind vectors for heatmap and arrow overlays.
+`cellRect` and `vectorEnds` project grid cells and wind vectors for heatmap and arrow overlays;
+`SaliencyOverlay` uses them for the regime engine's saliency and 850 hPa winds.
+
+## Forecaster overrides
+
+A duty forecaster can set a district-day's regime on the Regimes screen, with a reason. Overrides are
+kept in the app state as `{ [districtId]: { [lead]: { regime, reason, by, at } } }` and in
+`localStorage` when the browser allows it. Every screen reads the forecast through `useForecast()`
+([`src/state/useForecast.js`](src/state/useForecast.js)), which applies them: the weights become one-hot
+on the chosen regime, the amount is re-blended with `blend.js` and the range, chances and warning are
+recomputed with `risk.js`. National counts (warnings, exposure, regimes) are recounted with
+[`src/lib/summary.js`](src/lib/summary.js), which the generator uses too. The data files are never changed.
 
 The layout targets a 1440×900 screen and holds from 1280 to 1920 px wide; there is no mobile layout.
 

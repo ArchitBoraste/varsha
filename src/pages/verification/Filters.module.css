@@ -1,0 +1,31 @@
+.row {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.filter select {
+  height: var(--control-height);
+  padding: 0 8px;
+  border: 1px solid var(--line-control);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.sample {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ink-2);
+}

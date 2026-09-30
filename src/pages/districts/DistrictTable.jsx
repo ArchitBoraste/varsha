@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router';
 import Button from '../../components/Button/Button.jsx';
 import Card from '../../components/Card/Card.jsx';
 import Icon from '../../components/Icon/Icon.jsx';
+import OverrideChip from '../../components/OverrideChip/OverrideChip.jsx';
 import WarningBadge from '../../components/WarningBadge/WarningBadge.jsx';
 import { cx } from '../../lib/cx.js';
 import { downloadText, toCsv } from '../../lib/csv.js';
@@ -45,7 +46,10 @@ const DistrictRow = memo(function DistrictRow({ row, onOpen }) {
         </td>
       ))}
       <td>
-        <WarningBadge level={row.warning} size="sm" />
+        <span className={styles.warning}>
+          <WarningBadge level={row.warning} size="sm" />
+          {row.override && <OverrideChip override={row.override} size="sm" />}
+        </span>
       </td>
     </tr>
   );

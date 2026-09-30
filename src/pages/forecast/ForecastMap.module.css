@@ -41,7 +41,9 @@
 
 .mapArea {
   position: absolute;
-  inset: 84px 75px 16px;
+  /* Right of the mockup's 75px, and further right on narrower cards, so the legend covers only
+     sea off the Konkan and Karnataka coast. */
+  inset: 84px 40px 16px max(116px, calc(320px - 25%));
 }
 
 .legend {

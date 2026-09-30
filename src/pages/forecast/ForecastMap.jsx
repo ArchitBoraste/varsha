@@ -1,24 +1,26 @@
 import { useCallback, useMemo, useState } from 'react';
 import Card from '../../components/Card/Card.jsx';
+import DistrictTooltip from '../../components/DistrictTooltip/DistrictTooltip.jsx';
 import IndiaMap from '../../components/IndiaMap';
 import MapLegend from '../../components/MapLegend/MapLegend.jsx';
+import SaliencyOverlay from '../../components/SaliencyOverlay/SaliencyOverlay.jsx';
 import SegmentedControl from '../../components/SegmentedControl/SegmentedControl.jsx';
 import Switch from '../../components/Switch/Switch.jsx';
+import { LAYERS, THRESHOLD_OPTIONS, layerFill, layerLegend, layerTooltipLines } from '../../lib/layers.js';
 import { rainColor } from '../../lib/scales.js';
 import { useAppState } from '../../state/AppState.jsx';
-import { useDataset, useIndiaGeo } from '../../state/useDataset.js';
+import { useIndiaGeo } from '../../state/useDataset.js';
+import { useForecast, useNationalSummary } from '../../state/useForecast.js';
 import ExposureMarkers from './ExposureMarkers.jsx';
-import { LAYERS, THRESHOLD_OPTIONS, layerFill, layerLegend, layerTooltip } from './layers.jsx';
 import MapStatus from './MapStatus.jsx';
-import SaliencyOverlay from './SaliencyOverlay.jsx';
 import styles from './ForecastMap.module.css';
 
 /** The forecast console's map card: layer switcher, map with overlays, status and legend. */
 export default function ForecastMap() {
   const { lead, selectedDistrictId, selectDistrict } = useAppState();
   const { districts, states, error: geoError } = useIndiaGeo();
-  const { data: forecast, error: forecastError } = useDataset('forecast.json');
-  const { data: meta } = useDataset('meta.json');
+  const { data: forecast, error: forecastError } = useForecast();
+  const summary = useNationalSummary(lead);
   const [layer, setLayer] = useState('rain');
   const [compareOn, setCompareOn] = useState(true);
   const [threshold, setThreshold] = useState('p115');
@@ -48,8 +50,12 @@ export default function ForecastMap() {
   );
 
   const getTooltip = useMemo(() => {
-    const tooltip = layerTooltip(layer, threshold);
-    return (feature) => tooltip(forecast[feature.properties.id], dayOf(feature));
+    const linesOf = layerTooltipLines(layer, threshold);
+    return (feature) => {
+      const district = forecast[feature.properties.id];
+      const day = dayOf(feature);
+      return <DistrictTooltip name={district.name} state={district.state} lines={linesOf(district, day)} override={day.override} />;
+    };
   }, [layer, threshold, forecast, dayOf]);
 
   const legend = layerLegend(layer, threshold);
@@ -68,7 +74,7 @@ export default function ForecastMap() {
             <SegmentedControl label="Heavy-rain threshold" options={THRESHOLD_OPTIONS} value={threshold} onChange={setThreshold} />
           )}
         </div>
-        {meta && <MapStatus layer={layer} summary={meta.days[lead - 1]} />}
+        {summary && <MapStatus layer={layer} summary={summary} />}
       </div>
 
       {error && (

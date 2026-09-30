@@ -1,0 +1,4 @@
+.override {
+  margin-top: 2px;
+  color: var(--override-on-dark);
+}

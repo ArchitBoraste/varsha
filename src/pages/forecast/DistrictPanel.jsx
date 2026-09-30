@@ -3,6 +3,7 @@ import Button from '../../components/Button/Button.jsx';
 import LinkButton from '../../components/Button/LinkButton.jsx';
 import Card from '../../components/Card/Card.jsx';
 import Icon from '../../components/Icon/Icon.jsx';
+import OverrideChip from '../../components/OverrideChip/OverrideChip.jsx';
 import RegimeMix from '../../components/RegimeMix/RegimeMix.jsx';
 import WarningBadge from '../../components/WarningBadge/WarningBadge.jsx';
 import { cx } from '../../lib/cx.js';
@@ -10,6 +11,7 @@ import { explainCorrection } from '../../lib/explain.js';
 import { formatPeople, formatSignedMm, plural } from '../../lib/format.js';
 import { useAppState } from '../../state/AppState.jsx';
 import { useDataset } from '../../state/useDataset.js';
+import { useForecast } from '../../state/useForecast.js';
 import ChanceBars from './ChanceBars.jsx';
 import styles from './DistrictPanel.module.css';
 
@@ -34,6 +36,7 @@ function DistrictDetails({ id, district, lead, leadInfo, onClose }) {
 
       <div className={styles.badges}>
         <WarningBadge level={day.warning} showAction />
+        {day.override && <OverrideChip override={day.override} />}
         {landslideProne && (
           <span className={styles.chip}>
             <Icon name="triangle" size={12} strokeWidth={2} />
@@ -114,7 +117,7 @@ function EmptyState({ message, takeFocus }) {
 /** The selected district for the current lead day, or a prompt to pick one. */
 export default function DistrictPanel() {
   const { lead, selectedDistrictId, selectDistrict } = useAppState();
-  const { data: forecast } = useDataset('forecast.json');
+  const { data: forecast } = useForecast();
   const { data: meta } = useDataset('meta.json');
   // Closing the panel moves focus to the empty state rather than dropping it on the page.
   const [closedByUser, setClosedByUser] = useState(false);

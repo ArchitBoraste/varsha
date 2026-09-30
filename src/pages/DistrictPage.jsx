@@ -7,6 +7,7 @@ import Page from '../components/Page/Page.jsx';
 import RunButton from '../components/RunButton/RunButton.jsx';
 import { useAppState } from '../state/AppState.jsx';
 import { useDataset } from '../state/useDataset.js';
+import { useForecast } from '../state/useForecast.js';
 import ChanceGrid from './district/ChanceGrid.jsx';
 import DistrictHeader from './district/DistrictHeader.jsx';
 import DriversCard from './district/DriversCard.jsx';
@@ -17,7 +18,7 @@ import styles from './DistrictPage.module.css';
 export default function DistrictPage() {
   const { id } = useParams();
   const { lead, selectDistrict } = useAppState();
-  const { data: forecast, error } = useDataset('forecast.json');
+  const { data: forecast, error } = useForecast();
   const { data: meta } = useDataset('meta.json');
   const district = forecast?.[id];
 

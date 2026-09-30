@@ -1,0 +1,24 @@
+.chip {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 5px;
+  padding: 0 8px;
+  border: 1px solid var(--override-line);
+  border-radius: var(--radius-chip);
+  background: var(--override-soft);
+  color: var(--override);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: help;
+}
+
+.md {
+  height: 28px;
+}
+
+.sm {
+  height: 22px;
+  font-size: 11px;
+}

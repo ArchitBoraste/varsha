@@ -5,14 +5,28 @@ import { geoMercator } from 'd3-geo';
 const PADDING = 4;
 const DEG = Math.PI / 180;
 
-/** Mercator projection fitting a GeoJSON object inside a width × height box. */
-export function fitProjection(geojson, width, height, padding = PADDING) {
+/** The corners of a [[west, south], [east, north]] box as GeoJSON; enough to fit a Mercator map. */
+const bboxCorners = ([[west, south], [east, north]]) => ({
+  type: 'MultiPoint',
+  coordinates: [
+    [west, south],
+    [east, south],
+    [east, north],
+    [west, north],
+  ],
+});
+
+/**
+ * Mercator projection fitting `target` inside a width × height box: a GeoJSON object, or a
+ * [[west, south], [east, north]] longitude/latitude box.
+ */
+export function fitProjection(target, width, height, padding = PADDING) {
   return geoMercator().fitExtent(
     [
       [padding, padding],
       [width - padding, height - padding],
     ],
-    geojson,
+    Array.isArray(target) ? bboxCorners(target) : target,
   );
 }
 

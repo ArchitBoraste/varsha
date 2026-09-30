@@ -7,8 +7,8 @@ import Icon from '../Icon/Icon.jsx';
 import styles from './CommandPalette.module.css';
 
 const MAX_RESULTS = 50;
-// The forecast console's map shows the selection; anywhere else a pick opens the district page.
-const MAP_SCREEN = '/';
+// These screens show the selection on their map; anywhere else a pick opens the district page.
+const MAP_SCREENS = new Set(['/', '/regimes']);
 
 /** District search dialog, opened from the top bar or with Ctrl/Cmd+K on any screen. */
 export default function CommandPalette() {
@@ -58,7 +58,7 @@ function SearchDialog({ onClose }) {
   const choose = ({ id }) => {
     selectDistrict(id);
     onClose();
-    if (pathname !== MAP_SCREEN) navigate(`/districts/${id}`);
+    if (!MAP_SCREENS.has(pathname)) navigate(`/districts/${id}`);
   };
 
   const handleKeyDown = (event) => {

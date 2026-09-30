@@ -1,9 +1,9 @@
 import { useId, useMemo } from 'react';
-import { cellRect, useMap, vectorEnds } from '../../components/IndiaMap';
 import { ramp } from '../../lib/color.js';
+import { MARKER_COLORS } from '../../lib/layers.js';
 import { SALIENCY_STOPS } from '../../lib/scales.js';
 import { useDataset } from '../../state/useDataset.js';
-import { MARKER_COLORS } from './layers.jsx';
+import { cellRect, useMap, vectorEnds } from '../IndiaMap';
 
 // Cells fainter than this are not drawn.
 const MIN_SALIENCY = 0.04;

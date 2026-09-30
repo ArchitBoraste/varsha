@@ -1,0 +1,84 @@
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.chart {
+  position: relative;
+}
+
+.svg {
+  display: block;
+}
+
+.grid {
+  stroke: var(--surface-2);
+}
+
+.axis {
+  stroke: #b8c3cb;
+}
+
+.tick {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--ink-3);
+}
+
+.band {
+  fill: var(--accent-soft);
+}
+
+.faded {
+  opacity: 0.3;
+}
+
+.whisker line {
+  stroke: var(--ink);
+  stroke-opacity: 0.45;
+  stroke-width: 1;
+}
+
+.groupLabel {
+  font-size: 11px;
+  fill: var(--ink-2);
+}
+
+.groupCurrent {
+  font-weight: 600;
+  fill: var(--ink);
+}
+
+.none {
+  font-size: 11px;
+  fill: var(--ink-3);
+}
+
+/* Invisible hover and focus targets over each regime's group. */
+.hit {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: default;
+}
+
+.hit:focus-visible {
+  outline-offset: -2px;
+}

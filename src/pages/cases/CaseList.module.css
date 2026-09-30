@@ -1,0 +1,73 @@
+.list {
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cases {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.case {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  text-align: left;
+  transition: border-color 120ms ease;
+}
+
+.case:hover {
+  border-color: #b8c3cb;
+}
+
+/* The 2px accent border replaces the 1px one without shifting the content. */
+.selected,
+.selected:hover {
+  padding: 15px;
+  border: 2px solid var(--accent);
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.meta {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.regime {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.add {
+  height: 64px;
+  border: 1px dashed #b8c3cb;
+  border-radius: 14px;
+  background: transparent;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.add[aria-disabled='true'] {
+  cursor: not-allowed;
+}

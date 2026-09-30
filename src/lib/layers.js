@@ -1,18 +1,10 @@
-// The forecast console's map layers: how each colours a district, what its tooltip says and
-// what its legend shows.
+// The map layers of the forecast console, also used by the regime monitor: how each colours a
+// district-day, what its tooltip says and what its legend shows.
 
-import { formatMm, formatPeople, formatPercent, joinAnd } from '../../lib/format.js';
-import { rankRegimes, regimeFill, topRegime } from '../../lib/regimes.js';
-import { THRESHOLDS } from '../../lib/risk.js';
-import {
-  PROB_BANDS,
-  RAIN_CATEGORIES,
-  REGIMES,
-  SALIENCY_STOPS,
-  WARNINGS,
-  probColor,
-  rainColor,
-} from '../../lib/scales.js';
+import { formatMm, formatPeople, formatPercent, joinAnd } from './format.js';
+import { rankRegimes, regimeFill, topRegime } from './regimes.js';
+import { THRESHOLDS } from './risk.js';
+import { PROB_BANDS, RAIN_CATEGORIES, REGIMES, SALIENCY_STOPS, WARNINGS, probColor, rainColor } from './scales.js';
 
 export const LAYERS = [
   { id: 'rain', label: 'Rainfall' },
@@ -47,41 +39,32 @@ export function layerFill(layer, threshold) {
   }
 }
 
-function tooltipLines(layer, threshold, { exposure }, day) {
-  switch (layer) {
-    case 'rain':
-      return [`Varsha ${formatMm(day.corrected)} · Raw GFS ${formatMm(day.raw)}`];
-    case 'regime':
-      return rankRegimes(day.p)
-        .filter(({ share }) => share >= 0.01)
-        .map(({ label, share }) => `${label} ${formatPercent(share)}`);
-    case 'prob':
-      return [`Chance of ≥ ${thresholdMm(threshold)} mm: ${formatPercent(day.probs[threshold])}`];
-    case 'exposure': {
-      const { label, action } = WARNINGS[day.warning];
-      const { population, landslideProne, dams } = exposure;
-      return [
-        `${label} · ${action}`,
-        `${formatPeople(population)} people`,
-        landslideProne && 'Landslide-prone',
-        dams.length > 0 && `${joinAnd(dams)} ${dams.length > 1 ? 'dams' : 'dam'}`,
-      ].filter(Boolean);
+/** Tooltip lines under the district name for a layer: (district, district-day) => string[]. */
+export function layerTooltipLines(layer, threshold) {
+  return ({ exposure }, day) => {
+    switch (layer) {
+      case 'rain':
+        return [`Varsha ${formatMm(day.corrected)} · Raw GFS ${formatMm(day.raw)}`];
+      case 'regime':
+        return rankRegimes(day.p)
+          .filter(({ share }) => share >= 0.01)
+          .map(({ label, share }) => `${label} ${formatPercent(share)}`);
+      case 'prob':
+        return [`Chance of ≥ ${thresholdMm(threshold)} mm: ${formatPercent(day.probs[threshold])}`];
+      case 'exposure': {
+        const { label, action } = WARNINGS[day.warning];
+        const { population, landslideProne, dams } = exposure;
+        return [
+          `${label} · ${action}`,
+          `${formatPeople(population)} people`,
+          landslideProne && 'Landslide-prone',
+          dams.length > 0 && `${joinAnd(dams)} ${dams.length > 1 ? 'dams' : 'dam'}`,
+        ].filter(Boolean);
+      }
+      default:
+        return [`${topRegime(day.p).label} regime`];
     }
-    default:
-      return [`${topRegime(day.p).label} regime`];
-  }
-}
-
-/** (district, district-day) => tooltip content for a layer. */
-export function layerTooltip(layer, threshold) {
-  return (district, day) => (
-    <>
-      <strong>{district.name}</strong>, {district.state}
-      {tooltipLines(layer, threshold, district, day).map((line) => (
-        <div key={line}>{line}</div>
-      ))}
-    </>
-  );
+  };
 }
 
 const EXPOSURE_ITEMS = [

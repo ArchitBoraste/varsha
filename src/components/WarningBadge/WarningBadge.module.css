@@ -16,3 +16,8 @@
 .sm {
   height: 26px;
 }
+
+.xs {
+  height: 22px;
+  padding: 0 8px;
+}

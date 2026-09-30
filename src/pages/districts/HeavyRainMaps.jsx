@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import Card from '../../components/Card/Card.jsx';
+import DistrictTooltip from '../../components/DistrictTooltip/DistrictTooltip.jsx';
 import IndiaMap from '../../components/IndiaMap';
 import { formatPercent } from '../../lib/format.js';
 import { THRESHOLDS } from '../../lib/risk.js';
@@ -11,18 +12,21 @@ const MAP_HEIGHT = 330;
 
 function ThresholdMap({ threshold, districts, states, forecast, lead }) {
   const { key, mm, label } = threshold;
-  const chance = useCallback((feature) => forecast[feature.properties.id].days[lead - 1].probs[key], [forecast, lead, key]);
-  const getFill = useCallback((feature) => probColor(chance(feature)), [chance]);
+  const dayOf = useCallback((feature) => forecast[feature.properties.id].days[lead - 1], [forecast, lead]);
+  const getFill = useCallback((feature) => probColor(dayOf(feature).probs[key]), [dayOf, key]);
   const getTooltip = useCallback(
-    (feature) => (
-      <>
-        <strong>{feature.properties.district}</strong>, {feature.properties.state}
-        <div>
-          Chance of ≥ {mm} mm: {formatPercent(chance(feature))}
-        </div>
-      </>
-    ),
-    [chance, mm],
+    ({ properties }) => {
+      const day = dayOf({ properties });
+      return (
+        <DistrictTooltip
+          name={properties.district}
+          state={properties.state}
+          lines={[`Chance of ≥ ${mm} mm: ${formatPercent(day.probs[key])}`]}
+          override={day.override}
+        />
+      );
+    },
+    [dayOf, key, mm],
   );
 
   return (

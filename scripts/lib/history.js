@@ -2,7 +2,7 @@
 // GFS and from Varsha, for every district.
 
 import { forecastDay } from './forecast.js';
-import { GFS_BIAS, RUN, pastSystems, rainDayEnd } from './scenario.js';
+import { GFS_BIAS_PAST, RUN, pastSystems, rainDayEnd } from './scenario.js';
 import { observedPhaseOn } from './timeline.js';
 
 const HISTORY_DAYS = 30;
@@ -21,7 +21,7 @@ export function buildHistory(places) {
     dates: days.map(({ date }) => date),
     districts: Object.fromEntries(
       places.map((place) => {
-        const forecasts = days.map(({ t, systems }) => forecastDay(place, systems, GFS_BIAS, 1, t));
+        const forecasts = days.map(({ t, systems }) => forecastDay(place, systems, GFS_BIAS_PAST, 1, t));
         return [
           place.id,
           {

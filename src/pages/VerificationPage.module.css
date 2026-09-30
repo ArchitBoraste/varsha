@@ -1,0 +1,23 @@
+.status {
+  padding: 20px 24px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+/* Ladder 700px and reliability the rest (376px of plot) at 1440 wide, as in the mockup. */
+.chartsRow {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 700fr) minmax(0, 424fr);
+  gap: 20px;
+  height: 360px;
+}
+
+/* FSS 560px and the lead-day table the rest. */
+.tablesRow {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 560fr) minmax(0, 564fr);
+  gap: 20px;
+  height: 320px;
+}

@@ -18,6 +18,7 @@ export const districtRows = (forecast, lead) =>
       regime: topRegime(day.p),
       probs: day.probs,
       warning: day.warning,
+      override: day.override,
     };
   });
 
@@ -75,4 +76,5 @@ export const csvColumns = (leadInfo) => [
   { header: 'chance_ge_115_6_mm', value: (row) => row.probs.p115 },
   { header: 'chance_ge_204_5_mm', value: (row) => row.probs.p204 },
   { header: 'warning', value: (row) => row.warning },
+  { header: 'override_reason', value: (row) => row.override?.reason ?? '' },
 ];

@@ -42,3 +42,14 @@ export function warningLevel({ p64, p115, p204 }) {
   if (p64 >= 0.5) return 'yellow';
   return 'green';
 }
+
+/** The warning a forecast of `mm` at `lead` days would carry. */
+export const forecastWarning = (mm, lead) => warningLevel(exceedanceProbs(mm, lead));
+
+const OBSERVED_LEVELS = { p64: 'yellow', p115: 'orange', p204: 'red' };
+
+/** The warning colour an observed amount matches: the highest IMD threshold it reached. */
+export function observedWarning(mm) {
+  const reached = THRESHOLDS.findLast((threshold) => mm >= threshold.mm);
+  return reached ? OBSERVED_LEVELS[reached.key] : 'green';
+}

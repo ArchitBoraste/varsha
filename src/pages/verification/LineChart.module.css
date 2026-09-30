@@ -1,0 +1,84 @@
+.chart {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.svg {
+  display: block;
+  overflow: visible;
+}
+
+.grid {
+  stroke: var(--surface-2);
+}
+
+.axis {
+  stroke: #b8c3cb;
+}
+
+.tick {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--ink-3);
+}
+
+.axisTitle {
+  font-size: 11px;
+  fill: var(--ink-2);
+}
+
+.reference {
+  stroke: #b8c3cb;
+  stroke-dasharray: 4 4;
+}
+
+.level {
+  stroke-dasharray: 4 4;
+}
+
+.levelLabel {
+  font-size: 11px;
+  fill: #9a5516;
+}
+
+.guide {
+  stroke: var(--ink);
+  stroke-opacity: 0.25;
+}
+
+.line {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* A ring in the surface colour keeps overlapping points apart. */
+.point {
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+
+/* Direct labels wear text colours; the line beside each carries its identity. */
+.label {
+  font-size: 12px;
+  fill: var(--ink-3);
+}
+
+.labelStrong {
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--accent);
+}
+
+/* Invisible hover and focus targets, one per x value. */
+.hit {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: default;
+}
+
+.hit:focus-visible {
+  outline-offset: -2px;
+}

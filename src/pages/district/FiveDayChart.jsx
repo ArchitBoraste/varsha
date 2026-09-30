@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Card from '../../components/Card/Card.jsx';
 import Tooltip from '../../components/Tooltip/Tooltip.jsx';
+import { barPath } from '../../lib/chart.js';
 import { formatMm } from '../../lib/format.js';
 import { THRESHOLDS } from '../../lib/risk.js';
 import useElementSize from '../../lib/useElementSize.js';
@@ -27,12 +28,6 @@ function yAxis(maxValue) {
   const step = [10, 20, 25, 50, 100, 200].find((candidate) => maxValue / candidate <= 4) ?? 250;
   const max = Math.ceil(maxValue / step) * step;
   return { max, ticks: Array.from({ length: max / step + 1 }, (_, i) => i * step) };
-}
-
-/** Bar with rounded top corners standing on `bottom`. */
-function barPath(x, top, width, bottom) {
-  const r = Math.min(4, width / 2, bottom - top);
-  return `M${x},${bottom}V${top + r}Q${x},${top} ${x + r},${top}H${x + width - r}Q${x + width},${top} ${x + width},${top + r}V${bottom}Z`;
 }
 
 /** Raw vs Varsha rainfall for the five lead days, with the likely range and IMD thresholds. */
@@ -148,6 +143,7 @@ export default function FiveDayChart({ district, leads }) {
               Varsha {formatMm(days[hovered].corrected)} (likely {days[hovered].range[0]}–{days[hovered].range[1]})
             </div>
             <div>Raw GFS {formatMm(days[hovered].raw)}</div>
+            {days[hovered].override && <div>Overridden: {days[hovered].override.reason}</div>}
           </Tooltip>
         )}
       </div>

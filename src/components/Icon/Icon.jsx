@@ -89,6 +89,25 @@ const PATHS = {
       <path d="M4 20h16" />
     </>
   ),
+  pen: (
+    <>
+      <path d="M4 20h4L19 9l-4-4L4 16z" />
+      <path d="M13 7l4 4" />
+    </>
+  ),
+  undo: (
+    <>
+      <path d="M9 14L4 9l5-5" />
+      <path d="M4 9h11a5 5 0 010 10h-3" />
+    </>
+  ),
+  playSolid: <path d="M8 5l12 7-12 7z" fill="currentColor" stroke="none" />,
+  pause: (
+    <>
+      <path d="M8 5v14" />
+      <path d="M16 5v14" />
+    </>
+  ),
   chevronUp: <path d="M7 14l5-5 5 5" />,
   chevronDown: <path d="M7 10l5 5 5-5" />,
 };

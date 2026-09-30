@@ -1,0 +1,136 @@
+.card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.phase {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.phaseName {
+  font-family: var(--font-serif);
+  font-size: 40px;
+  line-height: 1;
+}
+
+.phaseShare {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.phaseBar {
+  display: flex;
+  height: 12px;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.phaseLabels {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.systems {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.system {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  font-size: 13px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 5px;
+}
+
+.systemName {
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.location {
+  overflow: hidden;
+  color: var(--ink-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.confidence {
+  flex-shrink: 0;
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.counts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: -2px;
+}
+
+.count {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: 10px;
+  height: 16px;
+  font-size: 12px;
+}
+
+.countLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.smallDot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+.track {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--surface-2);
+}
+
+.track span {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+}
+
+.countValue {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-align: right;
+}

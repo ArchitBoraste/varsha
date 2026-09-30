@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useMap } from '../../components/IndiaMap';
-import { MARKER_COLORS } from './layers.jsx';
+import { MARKER_COLORS } from '../../lib/layers.js';
 
 // Half the gap between a district's triangle and square when it has both, px.
 const PAIR_OFFSET = 4.5;

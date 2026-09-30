@@ -1,0 +1,31 @@
+.status {
+  padding: 20px 24px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+/* 196px tall as in the mockup. */
+.summary {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  height: 196px;
+}
+
+/* Map 584px and side column 540px wide at 1440 × 900; both give way on narrower screens. The
+   side column may run below the fold, the map fills the first screen. */
+.main {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: minmax(440px, 584fr) minmax(460px, 540fr);
+  align-items: start;
+  gap: 20px;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}

@@ -116,16 +116,20 @@ const PAST_LOWS = [
 
 const PHASE_STRENGTH = { active: 1.3, normal: 1, break: 0.35 };
 
+// Ordinary monsoon days are more convective, so what falls strays further from the learnable signal.
+const PAST_SURPRISE = { scale: 0.25, showers: 6 };
+
 /** Weather systems for a past day `t` (≤ -2) in the observed monsoon `phase`. */
 export function pastSystems(t, phase) {
   const strength = PHASE_STRENGTH[phase];
   const wave = 1 + 0.2 * Math.sin(0.9 * t);
   const low = PAST_LOWS.find(({ from, to }) => t >= from && t <= to);
   const days = low ? t - low.from : 0;
+  // Rain over Wayanad came in bursts, and was already building in the last week before the landslides.
+  const burst = 1 + 0.5 * Math.sin(1.7 * t + 0.3);
   return {
     ghats: { amp: 60 * strength * wave },
-    // Rain was already building over Wayanad in the last week before the landslides.
-    wayanad: { lon: 76.1, lat: 11.65, amp: t >= -8 ? 45 * strength : 0 },
+    wayanad: { lon: 76.1, lat: 11.65, amp: (t >= -8 ? 48 : 14) * strength * burst },
     depression: low
       ? { lon: low.lon - days, lat: low.lat + 0.3 * days, amp: low.amp }
       : { lon: 85, lat: 21, amp: 0 },
@@ -133,8 +137,13 @@ export function pastSystems(t, phase) {
     northEast: { lon: 91.6, lat: 25.4, amp: phase === 'break' ? 90 : 45 * wave },
     foothills: { lon: 78.6, lat: 30.4, amp: phase === 'break' ? 70 : 35 },
     wd: { lon: 75.4, lat: 33.4, amp: t >= -26 && t <= -23 ? 25 : 4 },
+    surprise: PAST_SURPRISE,
   };
 }
+
+// On the ordinary rain days of the month before, the model caught more of the orographic rain than
+// it did of the extreme event.
+export const GFS_BIAS_PAST = { ...GFS_BIAS, ghats: 0.7, wayanad: 0.5 };
 
 /** 8–10 Jul 2023: a western disturbance meets the monsoon over north-west India (t = 0 … 2). */
 export function himachalSystems(t) {

@@ -1,7 +1,6 @@
 // National summary per lead day: monsoon phase, detected systems, warnings, exposure and regimes.
 
-import { topRegime } from '../../src/lib/regimes.js';
-import { REGIMES } from '../../src/lib/scales.js';
+import { districtCounts } from '../../src/lib/summary.js';
 import { climatology } from './fields.js';
 import { logistic, round } from './math.js';
 import { DETECTED_SYSTEMS } from './scenario.js';
@@ -31,31 +30,11 @@ function monsoonPhase(districts, lead) {
   return { active, normal: round(1 - active - brk, 2), break: brk };
 }
 
-const isWarned = (warning) => warning === 'red' || warning === 'orange';
-
 export function nationalSummary(forecast, lead) {
-  const districts = Object.values(forecast);
-  const warnings = { red: 0, orange: 0, yellow: 0, green: 0 };
-  const exposure = { population: 0, landslideProne: 0, dams: 0 };
-  const regimes = Object.fromEntries(REGIMES.map(({ id }) => [id, 0]));
-
-  for (const district of districts) {
-    const day = district.days[lead - 1];
-    warnings[day.warning] += 1;
-    regimes[topRegime(day.p).id] += 1;
-    if (isWarned(day.warning)) {
-      exposure.population += district.exposure.population;
-      exposure.landslideProne += district.exposure.landslideProne ? 1 : 0;
-      exposure.dams += district.exposure.dams.length;
-    }
-  }
-
   return {
     lead,
-    phase: monsoonPhase(districts, lead),
+    phase: monsoonPhase(Object.values(forecast), lead),
     systems: DETECTED_SYSTEMS[lead - 1],
-    warnings,
-    exposure,
-    regimes,
+    ...districtCounts(forecast, lead),
   };
 }

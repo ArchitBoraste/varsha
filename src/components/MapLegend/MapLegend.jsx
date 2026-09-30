@@ -23,13 +23,13 @@ function Swatch({ color, shape }) {
 }
 
 /**
- * Map key: a title and entries of { color, label?, range?, shape? }, where `shape` is
+ * Map key: an optional title and entries of { color, label?, range?, shape? }, where `shape` is
  * 'triangle', 'square' or 'arrow' for marker overlays. Position it with `className`.
  */
 export default function MapLegend({ title, items, className }) {
   return (
     <div className={cx(styles.legend, className)}>
-      <p className={styles.title}>{title}</p>
+      {title && <p className={styles.title}>{title}</p>}
       <ul className={styles.items}>
         {items.map(({ color, label, range, shape }) => (
           <li key={`${color}${label ?? range}`} className={styles.item}>

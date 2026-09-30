@@ -1,0 +1,112 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 22px;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.note,
+.empty {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.entries {
+  display: flex;
+  flex-direction: column;
+}
+
+/* What changed on the first line, the reason below it, Undo on the right. */
+.entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 12px;
+  padding: 6px 0;
+}
+
+.entry + .entry {
+  border-top: 1px solid var(--surface-2);
+}
+
+.what {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.district {
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.district:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.lead {
+  flex-shrink: 0;
+  color: var(--ink-2);
+}
+
+.change {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-2);
+}
+
+.regime {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+.reason {
+  grid-column: 1;
+  overflow: hidden;
+  font-size: 12px;
+  color: var(--ink-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.undo {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  padding: 0 12px;
+  font-size: 12px;
+}

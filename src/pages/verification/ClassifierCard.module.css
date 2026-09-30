@@ -1,0 +1,139 @@
+.card {
+  flex-shrink: 0;
+}
+
+.legend {
+  display: flex;
+  gap: 14px;
+  margin-top: -4px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 40px;
+}
+
+.panelTitle {
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) 96px;
+  align-items: center;
+  gap: 12px;
+  height: 24px;
+  font-size: 12px;
+}
+
+.faded {
+  opacity: 0.35;
+}
+
+.rowLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+/* Persistence above, the classifier below, with a 2px gap between the two. */
+.pairBars {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pairBars span {
+  height: 7px;
+  border-radius: 0 4px 4px 0;
+}
+
+.values {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.values strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.none {
+  grid-column: span 2;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  border-radius: var(--radius-control);
+}
+
+.current {
+  background: var(--accent-soft);
+}
+
+.columnBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 104px;
+}
+
+.columnBars span {
+  width: 16px;
+  border-radius: 4px 4px 0 0;
+}
+
+.columnLabel {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.column .values {
+  font-size: 11px;
+}

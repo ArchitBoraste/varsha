@@ -1,0 +1,93 @@
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.regime {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: var(--radius-chip);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.run {
+  flex-shrink: 0;
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.maps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.playback {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.play {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 24px;
+  background: var(--ink);
+  color: var(--on-dark);
+}
+
+.play:hover {
+  background: #22313d;
+}
+
+.legend {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.swatch {
+  width: 18px;
+  height: 10px;
+}
+
+.legendText {
+  margin-left: 6px;
+  font-size: 11px;
+  color: var(--ink-2);
+}

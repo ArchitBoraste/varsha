@@ -1,0 +1,92 @@
+.stats {
+  flex: 1 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 20px;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.rows,
+.warnings {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.row dt {
+  color: var(--ink-2);
+}
+
+.row dd {
+  margin: 0;
+  font-family: var(--font-mono);
+}
+
+.row .strongLabel,
+.strongLabel {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.row .strongValue {
+  font-weight: 600;
+}
+
+.headline {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.big {
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.muted {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.headline + .muted {
+  font-size: 12px;
+}
+
+.warning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.warning dt {
+  width: 72px;
+}
+
+.warning dd {
+  margin: 0;
+}
+
+.warningLabel {
+  color: var(--ink-2);
+}
